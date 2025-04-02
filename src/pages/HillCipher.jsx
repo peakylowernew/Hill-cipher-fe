@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { encryptText, decryptText } from "../api/hillCipher"; // Giữ nguyên hàm mã hóa & giải mã
+import { encryptText, decryptText } from "../api/hillCipher";
+import Header from "../layout/Header";
+import Footer from "../layout/Footer";
 
-export default function Home() {
+const HillCipher = () => {
     const [plainText, setPlainText] = useState("");
     const [cipherText, setCipherText] = useState("");
     const [keyMatrix, setKeyMatrix] = useState("");
@@ -18,7 +20,8 @@ export default function Home() {
     };
 
     return (
-        <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow-md">
+        <div className="pt-16">
+            <Header />
             <h2 className="text-xl font-bold text-center mb-4">Hill Cipher</h2>
 
             <label className="block font-medium">Nhập ma trận khóa (VD: "2 3 3 6"):</label>
@@ -59,6 +62,9 @@ export default function Home() {
             </button>
 
             {result && <p className="mt-4 p-2 bg-gray-200 rounded">{result}</p>}
+            <Footer/>
         </div>
     );
 }
+
+export default HillCipher;
