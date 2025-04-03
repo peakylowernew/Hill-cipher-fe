@@ -6,8 +6,8 @@ export async function encryptText(text, keyMatrixString) {
 
         // Chuyển chuỗi thành ma trận số
         const keyMatrix = keyMatrixString
-            .trim()
-            .split(" ")
+            // .trim()
+            // .split(" ")
             .map(Number); // Chuyển từng phần tử thành số nguyên
 
         // Kiểm tra kích thước ma trận (2x2 hoặc 3x3)
@@ -41,10 +41,10 @@ export async function encryptText(text, keyMatrixString) {
             throw new Error("Invalid encryptedText received");
         }
 
-        return data.encryptedText; // Chỉ trả về string
+        return data;
     } catch (error) {
         console.error("Lỗi gọi API mã hóa:", error);
-        return "Lỗi mã hóa"; // Trả về chuỗi thay vì null để tránh lỗi React
+        return { encryptedText: '', processSteps: [] };  // Trả về chuỗi thay vì null để tránh lỗi React
     }
 }
 
