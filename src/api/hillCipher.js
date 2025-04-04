@@ -52,8 +52,8 @@ export async function decryptText(text, keyMatrixString) {
     try {
         // Chuyển chuỗi thành ma trận số
         const keyMatrix = keyMatrixString
-            .trim()
-            .split(" ")
+            // .trim()
+            // .split(" ")
             .map(Number); // Chuyển từng phần tử thành số nguyên
 
         // Kiểm tra kích thước ma trận (2x2 hoặc 3x3)
@@ -74,13 +74,15 @@ export async function decryptText(text, keyMatrixString) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix }), // 💡 Fix lỗi ở đây
         });
-
+        console.log("API response:", response);
+        
         if (!response.ok) {
             throw new Error(`Server returned ${response.status}: ${response.statusText}`);
         }
-
         const data = await response.json();
-        return data.decryptedText;
+        console.log("API Response:", data);
+        
+        return data;
     } catch (error) {
         console.error("Lỗi giải mã:", error);
         return null;
