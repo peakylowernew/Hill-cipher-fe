@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { decryptText } from "../../api/hillCipher";
 import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
-
 function parseKeyMatrix(keyMatrixArray) {
     const parsedMatrix = [];
 
@@ -11,13 +10,18 @@ function parseKeyMatrix(keyMatrixArray) {
         const item = keyMatrixArray[i];
         const char = item.toString().toUpperCase();
 
-        // Nếu là chữ số 0-9
-        if (/^\d$/.test(char)) {
-            parsedMatrix.push(Number(char));
-        }
         // Nếu là chữ cái A-Z
-        else if (/^[A-Z]$/.test(char)) {
+        if (/^[A-Z]$/.test(char)) {
             parsedMatrix.push(char.charCodeAt(0) - 65);
+        }
+        // Nếu là số trong khoảng từ 0 đến 25
+        else if (/^\d{1,2}$/.test(char)) {
+            const number = parseInt(char, 10);
+            if (number >= 0 && number <= 25) {
+                parsedMatrix.push(number);
+            } else {
+                throw new Error(`Số phải trong khoảng từ 0 đến 25, nhưng nhận được: ${number}`);
+            }
         }
         // Nếu không hợp lệ
         else {
@@ -73,13 +77,32 @@ const Decrypt = () => {
             alert("Kích thước ma trận phải từ 2x2 trở lên!");
         }
     };
-
     const handleKeyMatrixChange = (index, value) => {
         const newKeyMatrix = [...keyMatrix];
-        
-        // Chỉ cho phép nhập một ký tự chữ cái hoặc số
-        if (value.length <= 1 && /^[A-Za-z0-9]*$/.test(value)) {
-            newKeyMatrix[index] = value.toUpperCase();
+    
+        // Nếu người dùng xóa giá trị (value là chuỗi rỗng), không làm gì cả
+        if (value === "") {
+            newKeyMatrix[index] = "";
+            setKeyMatrix(newKeyMatrix);
+            return;
+        }
+    
+        // Nếu là chữ cái (A-Z)
+        if (/^[A-Za-z]$/.test(value)) {
+            newKeyMatrix[index] = value.toUpperCase(); // Chuyển chữ cái thành chữ hoa
+        }
+        // Nếu là số trong khoảng 0-25
+        else if (/^\d{1,2}$/.test(value)) {
+            const number = parseInt(value, 10);
+            if (number >= 0 && number <= 25) {
+                newKeyMatrix[index] = number;
+            } else {
+                alert("Số phải trong khoảng từ 0 đến 25");
+                return; // Nếu số ngoài phạm vi, không cập nhật giá trị
+            }
+        } else {
+            alert("Vui lòng nhập chữ cái (A-Z) hoặc số trong khoảng từ 0 đến 25");
+            return; // Nếu giá trị không hợp lệ, không cập nhật
         }
     
         setKeyMatrix(newKeyMatrix);
@@ -139,7 +162,7 @@ const Decrypt = () => {
                                                 className="p-2 border rounded w-full text-center"
                                                 value={keyMatrix[index]}
                                                 onChange={(e) => handleKeyMatrixChange(index, e.target.value)}
-                                                maxLength={1}
+                                                // maxLength={1}
                                             />
                                         ))}
                                     </div>
