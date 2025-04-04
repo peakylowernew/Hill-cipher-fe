@@ -3,15 +3,36 @@ import { Link } from "react-router-dom";
 import { encryptText } from "../../api/hillCipher";
 import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
+function parseKeyMatrix(keyMatrixArray) {
+    const parsedMatrix = [];
+
+    for (let i = 0; i < keyMatrixArray.length; i++) {
+        const item = keyMatrixArray[i];
+        const char = item.toString().toUpperCase();
+
+        // Nếu là chữ số 0-9
+        if (/^\d$/.test(char)) {
+            parsedMatrix.push(Number(char));
+        }
+        // Nếu là chữ cái A-Z
+        else if (/^[A-Z]$/.test(char)) {
+            parsedMatrix.push(char.charCodeAt(0) - 65);
+        }
+        // Nếu không hợp lệ
+        else {
+            throw new Error(`Ký tự không hợp lệ trong ma trận khóa: ${item}`);
+        }
+    }
+
+    return parsedMatrix;
+}
 
 const Encrypt = () => {
     const [plainText, setPlainText] = useState("");
     const [cipherText, setCipherText] = useState("");
     const [keyMatrix, setKeyMatrix] = useState([]);
     const [matrixSize, setMatrixSize] = useState(0);
-    const [result] = useState("");
     const [steps, setSteps] = useState([]);
-    const [encryptedText] = useState("");
     const [showMatrix, setShowMatrix] = useState(false);
     
     const handleEncrypt = async () => {
@@ -20,20 +41,24 @@ const Encrypt = () => {
             return;
         }
     
-        // Chờ kết quả từ API encryptText
-        const { encryptedText, processSteps } = await encryptText(plainText.trim(), keyMatrix.map(Number));
-    
-        // Log để kiểm tra giá trị trả về từ API
-        console.log("Encrypted Text:", encryptedText);
-    
-        if (encryptedText) {
-            setCipherText(encryptedText);  // Cập nhật cipherText
-            setSteps(processSteps);
-        } else {
-            setCipherText("");  // Nếu không có kết quả mã hóa, đặt cipherText rỗng
+        try {
+            const response = await encryptText(plainText.trim(), parseKeyMatrix(keyMatrix));
+            console.log("Dữ liệu trả về từ encryptText:", response);
+            
+            if (response && response.encryptedText && Array.isArray(response.processSteps)) {
+                setCipherText(response.encryptedText);
+                setSteps(response.processSteps);
+            } else {
+                throw new Error("Dữ liệu trả về không hợp lệ!");
+            }
+        } catch (error) {
+            console.error("Lỗi khi mã hóa:", error);
+            setCipherText("");
+            setSteps([]);
             alert("Có lỗi trong quá trình mã hóa!");
         }
     };
+    
 
     const handleMatrixSizeChange = (e) => {
         const size = parseInt(e.target.value);
@@ -52,10 +77,15 @@ const Encrypt = () => {
 
     const handleKeyMatrixChange = (index, value) => {
         const newKeyMatrix = [...keyMatrix];
-        newKeyMatrix[index] = value.replace(/\D/g, "");
+        
+        // Chỉ cho phép nhập một ký tự chữ cái (A-Z) hoặc số (0-9)
+        if (value.length <= 1 && /^[A-Za-z0-9]*$/.test(value)) {
+            newKeyMatrix[index] = value.toUpperCase(); // Chuyển chữ cái thành chữ hoa
+        }
+        
         setKeyMatrix(newKeyMatrix);
     };
-
+    
     return (
         <div>
             <Header />
@@ -112,6 +142,7 @@ const Encrypt = () => {
                                                 className="p-2 border rounded w-full text-center"
                                                 value={keyMatrix[index]}
                                                 onChange={(e) => handleKeyMatrixChange(index, e.target.value)}
+                                                maxLength={1}
                                             />
                                         ))}
                                     </div>
@@ -143,27 +174,33 @@ const Encrypt = () => {
                         </div>
                         <div>
                             <label className="block text-gray-700 mb-2">Chi tiết bước mã hóa</label>
-                            <div className="bg-gray-100 p-4 rounded h-full flex items-center justify-center">
-                                <span>...</span>
+                            <div className="bg-gray-100 p-4 rounded h-full">
+                                {steps && steps.length > 0 ? (
+                                <div className="mt-4 p-4 bg-gray-200 rounded">
+                                <h3 className="font-semibold">📌</h3>
+                                <ul className="list-disc list-inside text-sm space-y-2">
+                                {steps.map((step, index) => (
+                                    <div key={index}>
+                                        <p dangerouslySetInnerHTML={{ __html: step.key }} />
+                                        {step.details && step.details.map((detail, i) => (
+                                            <p 
+                                                key={i} 
+                                                style={{ marginLeft: "20px" }} 
+                                                dangerouslySetInnerHTML={{ __html: detail }} 
+                                            />
+                                        ))}
+                                        <p>{step.step}</p>
+                                    </div>
+                                ))}
+                                </ul>
+                            </div>
+                            
+                                ) : (
+                                    <p>🚀 Đang xử lý hoặc chưa có dữ liệu...</p>
+                                )}
                             </div>
                         </div>
                     </div>
-                    {encryptedText && (
-                        <div className="mt-4 p-2 bg-blue-100 rounded font-semibold">
-                            <p>Bản mã đã mã hóa: {encryptedText}</p>
-                        </div>
-                    )}
-                    {result && <p className="mt-4 p-2 bg-gray-200 rounded font-semibold">{result}</p>}
-                    {steps && steps.length > 0 && (
-                        <div className="mt-4 p-4 bg-gray-100 rounded">
-                            <h3 className="font-semibold">Chi tiết các bước:</h3>
-                            <ul className="list-disc list-inside text-sm">
-                                {steps.map((step, index) => (
-                                    <li key={index}>{step}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
                 </div>
             </div>
             <Footer />
