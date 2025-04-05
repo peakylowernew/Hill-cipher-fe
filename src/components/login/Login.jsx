@@ -80,7 +80,7 @@ const Login = () => {
                 <input type="checkbox" className="accent-gray-500" />
                 <span className="text-gray-300">Remember me</span>
               </label>
-              <Link to="/" className="text-gray-500 hover:text-gray-800"></Link>
+              {/* <Link to="/" className="text-gray-500 hover:text-gray-800"></Link> */}
             </div>
           </div>
           {error && (
