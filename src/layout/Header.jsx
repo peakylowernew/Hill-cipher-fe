@@ -36,7 +36,7 @@ const Header = () => {
         <Link to="/" className="text-black hover:underline">Home</Link>
         <Link to="/hillcipher" className="text-black hover:underline">Tools</Link>
         <Link to="/docs" className="text-black hover:underline">Docs</Link>
-        <Link to="/about" className="text-black hover:underline">About</Link>
+        <Link to="/abouts" className="text-black hover:underline">Abouts</Link>
     </nav>
 
     {/* User Status Check */}
