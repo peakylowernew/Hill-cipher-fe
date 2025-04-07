@@ -51,9 +51,6 @@ export async function decryptText(text, keyMatrixString) {
 
         // Kiểm tra kích thước ma trận (2x2 hoặc 3x3)
         let matrixSize = Math.sqrt(keyMatrix.length);
-        if (![2, 3].includes(matrixSize) || !Number.isInteger(matrixSize)) {
-            throw new Error("Ma trận khóa không hợp lệ! Chỉ hỗ trợ 2x2 hoặc 3x3.");
-        }
 
         // Chuyển thành mảng 2D (ma trận)
         let formattedKeyMatrix = [];

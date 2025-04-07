@@ -9,6 +9,7 @@ import Abouts from "./pages/About";
 import Encrypt from "./pages/hillCipher/Encrypt";
 import Decrypt from "./pages/hillCipher/Decrypt";
 
+
 function App() {
   return (
     <Router>
@@ -21,8 +22,7 @@ function App() {
         <Route path="/encrypt" element={<Encrypt />} />
         <Route path="/decrypt" element={<Decrypt />} />
         <Route path="/docs" element={<Docs />} />
-        <Route path="/abouts" element={<Abouts />} />
-
+        <Route path="/about" element={<Abouts />} />
       </Routes>
     </Router>
   );
