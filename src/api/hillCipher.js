@@ -35,25 +35,16 @@ export async function encryptText(text, keyMatrixString) {
             processSteps: processSteps, // Trả về processSteps
         };
     } catch (error) {
-        console.error("Lỗi gọi API mã hóa:", error);
         return { encryptedText: '', processSteps: [] };  // Trả về mảng trống nếu có lỗi
     }
 }
 
-
 export async function decryptText(text, keyMatrixString) {
     try {
         // Chuyển chuỗi thành ma trận số
-        const keyMatrix = keyMatrixString
-            // .trim()
-            // .split(" ")
-            .map(Number); // Chuyển từng phần tử thành số nguyên
+        const keyMatrix = keyMatrixString.map(Number); // Chuyển từng phần tử thành số nguyên
 
-        // Kiểm tra kích thước ma trận (2x2 hoặc 3x3)
         let matrixSize = Math.sqrt(keyMatrix.length);
-        if (![2, 3].includes(matrixSize) || !Number.isInteger(matrixSize)) {
-            throw new Error("Ma trận khóa không hợp lệ! Chỉ hỗ trợ 2x2 hoặc 3x3.");
-        }
 
         // Chuyển thành mảng 2D (ma trận)
         let formattedKeyMatrix = [];
@@ -61,23 +52,29 @@ export async function decryptText(text, keyMatrixString) {
             formattedKeyMatrix.push(keyMatrix.slice(i * matrixSize, (i + 1) * matrixSize));
         }
 
+        // Log dữ liệu trước khi gửi lên server
+        console.log("Sending data to server:", { text, keyMatrix: formattedKeyMatrix });
+
         // Gửi ma trận đúng định dạng lên backend
         const response = await fetch(`${API_BASE_URL}/api/hill/decrypt`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix }), // 💡 Fix lỗi ở đây
         });
+
         console.log("API response:", response);
         
         if (!response.ok) {
             throw new Error(`Server returned ${response.status}: ${response.statusText}`);
         }
+        
         const data = await response.json();
         console.log("API Response:", data);
 
         return data;
     } catch (error) {
-        console.error("Lỗi giải mã:", error);
-        return null;
+        console.error("Lỗi khi giải mã:", error.message);
+        console.log("Full error object:", error);
+        throw error;
     }
 }
