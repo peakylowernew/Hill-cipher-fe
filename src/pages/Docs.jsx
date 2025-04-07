@@ -7,25 +7,17 @@ const Docs = () => {
 
   return (
     <div>
-   <Header/>
-
-
-
+    <Header/>
       <div className="pt-16 max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-10 tracking-tight">
           Tài Liệu
         </h1>
-
-
         <div className="flex flex-row space-x-6 overflow-x-auto">
-
           <section className="bg-white shadow-lg rounded-xl p-8 flex-shrink-0 w-96 transition-all hover:shadow-xl hover:-translate-y-1">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Thuật toán Hill Cipher</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
               Thuật toán Hill Cipher là một phương pháp mã hóa đối xứng dựa trên đại số tuyến tính, được phát minh bởi Lester S. Hill vào năm 1929. Nó sử dụng ma trận để mã hóa và giải mã thông điệp, thay vì chỉ thay thế ký tự như các thuật toán mã hóa cổ điển (ví dụ: Caesar Cipher).
             </p>
-
-
             {isExpanded && (
               <div>
                 <h3 className="text-lg font-medium text-gray-700 mb-2">Nguyên lý hoạt động</h3>
@@ -66,7 +58,6 @@ const Docs = () => {
               </div>
             )}
 
-
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="mt-4 text-gray-700 hover:text-gray-900 font-medium underline focus:outline-none"
@@ -74,7 +65,6 @@ const Docs = () => {
               {isExpanded ? "Thu gọn" : "Xem thêm"}
             </button>
           </section>
-
 
           <section className="bg-white shadow-lg rounded-xl p-8 flex-shrink-0 w-96 transition-all hover:shadow-xl hover:-translate-y-1">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Cách bắt đầu</h2>
@@ -84,7 +74,6 @@ const Docs = () => {
               <li>Cập nhật hồ sơ cá nhân trong phần "Profile".</li>
             </ul>
           </section>
-
 
           <section className="bg-white shadow-lg rounded-xl p-8 flex-shrink-0 w-96 transition-all hover:shadow-xl hover:-translate-y-1">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">3. FAQ</h2>
@@ -106,7 +95,6 @@ const Docs = () => {
             Quay lại trang chủ
           </button>
         </div>
-   
     </div> 
     <Footer/>
     </div>
