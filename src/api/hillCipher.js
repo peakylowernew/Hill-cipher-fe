@@ -24,42 +24,37 @@ export async function encryptText(text, keyMatrixString) {
         const data = await response.json();
         console.log("API Response:", data);
 
-        // Nếu không có encryptedText hoặc processSteps, trả về dữ liệu mặc định
         if (!data.encryptedText) {
             throw new Error("Không có dữ liệu mã hóa");
         }
 
-        const processSteps = data.steps || []; // Đảm bảo rằng processSteps không bị undefined
+        const processSteps = data.steps || [];
         return {
             encryptedText: data.encryptedText,
-            processSteps: processSteps, // Trả về processSteps
+            processSteps: processSteps,
         };
     } catch (error) {
-        return { encryptedText: '', processSteps: [] };  // Trả về mảng trống nếu có lỗi
+        return { encryptedText: '', processSteps: [] };
     }
 }
 
 export async function decryptText(text, keyMatrixString) {
     try {
-        // Chuyển chuỗi thành ma trận số
-        const keyMatrix = keyMatrixString.map(Number); // Chuyển từng phần tử thành số nguyên
+        const keyMatrix = keyMatrixString.map(Number);
 
         let matrixSize = Math.sqrt(keyMatrix.length);
 
-        // Chuyển thành mảng 2D (ma trận)
         let formattedKeyMatrix = [];
-        for (let i = 0; i < matrixSize; i++) {
+        for (let i = 0; i < matrixSize; i++) {clcl
             formattedKeyMatrix.push(keyMatrix.slice(i * matrixSize, (i + 1) * matrixSize));
         }
 
-        // Log dữ liệu trước khi gửi lên server
         console.log("Sending data to server:", { text, keyMatrix: formattedKeyMatrix });
 
-        // Gửi ma trận đúng định dạng lên backend
         const response = await fetch(`${API_BASE_URL}/api/hill/decrypt`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix }), // 💡 Fix lỗi ở đây
+            body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix }),
         });
 
         console.log("API response:", response);
