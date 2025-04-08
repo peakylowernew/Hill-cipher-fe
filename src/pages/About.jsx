@@ -1,61 +1,89 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-const Abouts = () => {
-  useEffect(() => {
-    // Thêm script cho Lottie vào body
-    const script = document.createElement("script");
-    script.src = "https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs";
-    script.type = "module";
-    script.onload = () => {
-      console.log("Lottie Player script loaded successfully");
-    };
-    script.onerror = () => {
-      console.error("Error loading Lottie Player script");
-    };
-    document.body.appendChild(script);
-
-    // Cleanup để xóa script khi component bị unmount
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+const About = () => {
+  const [activeTab, setActiveTab] = useState("about");
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-900 text-white relative">
-      <Header />
-
-      <main className="flex-grow">
-        <section className="max-w-3xl mx-auto py-16 px-4 sm:px-6 lg:px-8 text-center relative">
-          <h2 className="pt-8 text-3xl font-bold text-white mb-6">Về Chúng Tôi</h2>
-
-          {/* Thêm Lottie animation */}
-          <div className="absolute top-6 right-6">
-          <DotLottieReact
-      src="https://lottie.host/652dcfb5-aa20-4a7e-a634-f4593b6572c1/7FZGO1tctM.lottie"
-      loop
-      autoplay
-      style={{width :'500px', height :'400px'}}
-    />
+    <div className="min-h-screen bg-gray-50 pt-20">
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} />
+      <div className="py-12 px-4 sm:px-6 lg:px-8 mt-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Hero Section */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
+               Hill Cipher
+            </h1>
+            <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+              Tìm hiểu về dự án và đội ngũ phát triển
+            </p>
           </div>
 
-          <p className="text-gray-400 leading-relaxed text-lg mb-4">
-            <strong>3AE</strong> là một nhóm sinh viên với niềm đam mê mã hóa và bảo mật thông tin. Website này được chúng tôi phát triển nhằm hiện thực hóa nguyện vọng xây dựng một công cụ trực quan, dễ sử dụng để <strong>mã hóa và giải mã theo thuật toán Hill Cipher</strong>.
-          </p>
-          <p className="text-gray-400 leading-relaxed text-lg mb-4">
-            Với mong muốn hỗ trợ người dùng tiếp cận kiến thức mật mã một cách trực quan, nhóm đã xây dựng nên hệ thống có khả năng minh họa, hướng dẫn và thực hành trực tiếp trên trình duyệt. Dù là sinh viên, giảng viên, hay bất kỳ ai yêu thích lĩnh vực an toàn thông tin – website này đều có thể là một công cụ hữu ích.
-          </p>
-          <p className="text-gray-400 leading-relaxed text-lg">
-            Chúng tôi tin rằng việc học mật mã không chỉ là lý thuyết khô khan, mà cần có sự trải nghiệm thực tế. Đó cũng chính là lý do mà 3AE không ngừng cải tiến website, mang đến trải nghiệm học tập thú vị và hiệu quả hơn mỗi ngày.
-          </p>
-        </section>
-      </main>
+          {/* Project Description */}
+          <div className="bg-white shadow rounded-lg p-6 mb-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Dự án của chúng tôi</h2>
+            <p className="text-gray-600 mb-4">
+              Hill Cipher là một hệ mật thay thế đa bảng dựa trên đại số tuyến tính.
+              Phiên bản của chúng tôi cung cấp cả khả năng mã hóa và giải mã.
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Tính năng</h3>
+                <ul className="list-disc pl-5 text-gray-600">
+                  <li>Mã hóa an toàn sử dụng phép toán ma trận</li>
+                  <li>Giao diện thân thiện với người dùng</li>
+                  <li>Tài liệu hướng dẫn chi tiết</li>
+                </ul>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">Công nghệ</h3>
+                <ul className="list-disc pl-5 text-gray-600">
+                  <li>Frontend React.js</li>
+                  <li>Backend Node.js</li>
+                  <li>JAMStack</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
+          {/* Team Members Section */}
+          <div className="bg-white shadow rounded-lg p-6 mb-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Đội ngũ phát triển</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Member 1 */}
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <div className="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span className="text-2xl font-bold text-blue-600">PMT</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800">Phạm Minh Trung</h3>
+                <p className="text-gray-600">Full Stack</p>
+              </div>
+
+              {/* Member 2 */}
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <div className="w-24 h-24 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-2xl font-bold text-green-600">HQV</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800">Huỳnh Quan Vinh</h3>
+                <p className="text-gray-600">Trưởng dự án & Full Stack</p>
+              </div>
+
+              {/* Member 3 */}
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <div className="w-24 h-24 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                  <span className="text-2xl font-bold text-purple-600">NPC</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800">Nguyễn Phi Cường</h3>
+                <p className="text-gray-600">Frontend</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
     </div>
   );
 };
 
-export default Abouts;
+export default About;
