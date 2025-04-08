@@ -61,12 +61,12 @@ const Header = () => {
         ) : (
             <>
                 <Link to="/login">
-                    <button className="bg-white text-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-gray-200">
+                    <button className="bg-white text-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white">
                         Login
                     </button>
                 </Link>
                 <Link to="/signup">
-                    <button className="bg-yellow-400 text-white px-4 py-2 rounded-md hover:bg-yellow-500">
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-blue-500">
                         Sign Up
                     </button>
                 </Link>

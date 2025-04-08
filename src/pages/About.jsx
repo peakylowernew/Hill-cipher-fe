@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const Abouts = () => {
   useEffect(() => {
@@ -32,14 +33,12 @@ const Abouts = () => {
 
           {/* Thêm Lottie animation */}
           <div className="absolute top-6 right-6">
-            <dotlottie-player
-              src="https://lottie.host/652dcfb5-aa20-4a7e-a634-f4593b6572c1/7FZGO1tctM.lottie"
-              background="transparent"
-              speed="1"
-              style={{ width: "300px", height: "300px" }}
-              loop
-              autoplay
-            ></dotlottie-player>
+          <DotLottieReact
+      src="https://lottie.host/652dcfb5-aa20-4a7e-a634-f4593b6572c1/7FZGO1tctM.lottie"
+      loop
+      autoplay
+      style={{width :'500px', height :'400px'}}
+    />
           </div>
 
           <p className="text-gray-400 leading-relaxed text-lg mb-4">

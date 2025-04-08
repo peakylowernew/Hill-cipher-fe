@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { RiArrowRightSLine, RiLockLine, RiFunctionLine, RiKeyLine, RiCodeSSlashLine } from 'react-icons/ri';
@@ -65,17 +66,25 @@ export default function Home() {
                       <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 
                         to-purple-500/10 rounded-full filter blur-3xl"></div>
                       <div className="relative grid grid-cols-2 gap-4">
-                        <div className="bg-white p-6 rounded-lg shadow-xl transform hover:scale-105 
+                        <div className="bg-white p-4 rounded-lg shadow-xl transform hover:scale-105 
                           transition-transform">
                           <RiLockLine className="w-10 h-10 text-indigo-600 mb-4" />
                           <h3 className="font-semibold text-slate-800">Secure Encryption</h3>
                           <p className="text-slate-600 mt-2">Matrix-based encryption for enhanced security</p>
                         </div>
-                        <div className="bg-white p-6 rounded-lg shadow-xl transform hover:scale-105 
+                        {/* <div className="bg-white p-6 rounded-lg shadow-xl transform hover:scale-105 
                           transition-transform mt-8">
                           <RiFunctionLine className="w-10 h-10 text-purple-600 mb-4" />
                           <h3 className="font-semibold text-slate-800">Matrix Operations</h3>
                           <p className="text-slate-600 mt-2">Linear algebra meets cryptography</p>
+                        </div> */}
+                        <div className="">
+                          <DotLottieReact
+                            src="https://lottie.host/fbead96f-094e-4732-919e-387ebfda72fc/wlkcjZatwQ.lottie"
+                            loop
+                            autoplay
+                            style={{ width: '300px', height: '200px' }}
+                          />
                         </div>
                       </div>
                     </div>

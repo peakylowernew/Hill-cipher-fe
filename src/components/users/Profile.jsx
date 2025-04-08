@@ -1,139 +1,172 @@
-import React, { useState } from "react";
 import Header from "../../layout/Header";
+import { useState, useMemo } from "react";
+import { FaBook, FaPhone, FaTimes } from "react-icons/fa"; // Sử dụng icon từ react-icons
+
 const avatar = "/image/avata2.jpg";
 
 const Profile = () => {
-  const year = 2025;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTool, setSelectedTool] = useState(null); // Lưu thông tin công cụ được chọn để hiển thị trong modal
 
-  // Danh sách các tháng và ngày trong tuần
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  // Dữ liệu mẫu
+  const historyData = useMemo(
+    () => [
+      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
+      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
+      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
+      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
+      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
+      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
+      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
+      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
+      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
+      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
+      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
+      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
+      // Thêm dữ liệu mẫu nếu cần
+    ],
+    []
+  );
 
-  // State để quản lý trạng thái Public/Private
-  const [isPublic, setIsPublic] = useState(true);
-
-  // Hàm lấy số ngày trong tháng
-  const getDaysInMonth = (month, year) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-
-  // Tạo dữ liệu contributions theo từng tháng
-  const contributionsByMonth = Array.from({ length: 12 }, (_, month) => {
-    const daysInMonth = getDaysInMonth(month, year);
-    return Array.from({ length: daysInMonth }, () => Math.floor(Math.random() * 5));
-  });
-
-  // Hàm chuyển đổi giữa Public và Private
-  const toggleVisibility = () => {
-    setIsPublic((prevState) => !prevState);
+  // Hàm mở modal và lưu thông tin công cụ được chọn
+  const openModal = (item) => {
+    setSelectedTool(item);
+    setIsModalOpen(true);
   };
 
   return (
-    <div className="pt-16 flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white font-sans pt-16">
       <Header />
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="flex items-center space-x-4">
+      <main className="max-w-5xl mx-auto p-6 space-y-10">
+        {/* Thông tin người dùng */}
+        <section className="flex items-center gap-6 bg-gray-800/50 p-6 rounded-xl shadow-lg">
           <img
             src={avatar}
-            alt="Pixelated purple character"
-            className="rounded-full w-24 h-24"
-            width="100"
-            height="100"
+            alt="User avatar"
+            className="rounded-full w-28 h-28 object-cover border-4 border-purple-500"
           />
-          <div>
-            <h1 className="text-2xl font-bold">Nguyễn Văn</h1>
-            <button className="mt-2 px-4 py-2 bg-gray-800 text-red-400 rounded hover:bg-gray-700 hover:border hover:border-red-400">
-              Edit profile
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold tracking-tight">Nguyễn Văn</h1>
+            <button className="mt-3 px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 rounded-lg text-white font-medium hover:from-red-600 hover:to-red-700 transition-all duration-300">
+              Edit Profile
             </button>
           </div>
-        </div>
+        </section>
 
-        {/* Pinned section */}
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold">Pinned</h2>
-          <div className="mt-2 p-4 bg-gray-800 rounded">
-            <div className="flex items-center space-x-2">
-              <i className="fas fa-book text-gray-400"></i>
-              <button className="text-blue-400">Đồ án tốt nghiệp Hillcipher</button>
-              <span
-                onClick={toggleVisibility} // Hàm xử lý click
-                className={`bg-gray-700 text-gray-400 text-xs px-2 py-1 rounded cursor-pointer ${
-                  isPublic ? "bg-grayay-500" : "bg-gray-500"
-                }`}
+        {/* Thông tin cá nhân */}
+        <section className="bg-gray-800/50 p-6 rounded-xl shadow-lg">
+          <h2 className="text-xl font-semibold mb-4">Thông tin cá nhân</h2>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <FaBook className="text-gray-400" />
+              <p className="text-blue-400">Email: nguyenvan@gmail.com</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <FaPhone className="text-gray-400" />
+              <p className="text-blue-400">Phone: 01928356</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Lịch sử sử dụng công cụ */}
+        <section className="bg-gray-800/50 p-6 rounded-xl shadow-lg">
+          <h2 className="text-xl font-semibold mb-4">Tool usage history</h2>
+          <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700">
+            <table className="w-full text-sm text-left">
+              <thead className="sticky top-0 bg-gray-800/80 text-gray-300">
+                <tr className="border-b border-gray-600">
+                  <th className="p-3">Tools</th>
+                  <th className="p-3">Day</th>
+                  <th className="p-3 text-right">detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                {historyData.length > 0 ? (
+                  historyData.map((item) => (
+                    <tr key={item.id} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
+                      <td className="p-3">{item.tool}</td>
+                      <td className="p-3">{item.day}</td>
+                      <td className="p-3 text-right">
+                        <button
+                          onClick={() => openModal(item)}
+                          className="text-blue-400 underline hover:text-blue-300 transition-colors"
+                        >
+                          {item.content}
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="p-3 text-center text-gray-400">
+                      Không có dữ liệu
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      {/* Modal */}
+      {isModalOpen && selectedTool && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
+          <div className="bg-gray-100 p-6 rounded-xl w-full max-w-md text-gray-800 shadow-2xl animate-fade-in">
+            <div className="flex justify-between items-center mb-5">
+              <h3 className="text-xl font-semibold">Chi tiết công cụ</h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-600 hover:text-gray-800 transition-colors"
               >
-                {isPublic ? "Public" : "Private"}
-              </span>
+                <FaTimes size={20} />
+              </button>
             </div>
-          </div>
-        </div>
-
-        {/* Contributions */}
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold">Contribution activity in {year}</h2>
-          <div className="mt-2 p-4 bg-gray-900 rounded">
-            <div className="flex">
-              {/* Nhãn ngày trong tuần */}
-              <div className="flex flex-col justify-start text-sm text-gray-400 mr-2 mt-[21px]">
-                {days.map((day, index) => (
-                  <span key={index} className="h-5 flex items-center">{day}</span>
-                ))}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Khóa</label>
+                <input
+                  type="text"
+                  value={selectedTool.key}
+                  className="mt-1 w-full p-2 bg-gray-200 rounded-lg border border-gray-300"
+                  readOnly
+                />
               </div>
-
-              {/* Lưới theo tháng */}
-              <div className="flex overflow-x-auto space-x-4">
-                {contributionsByMonth.map((monthData, monthIndex) => (
-                  <div key={monthIndex} className="flex flex-col">
-                    <span className="text-sm text-gray-400 text-center mb-1">{months[monthIndex]}</span>
-                    <div className="grid grid-rows-7 grid-flow-col gap-1">
-                      {monthData.map((value, dayIndex) => (
-                        <div
-                          key={dayIndex}
-                          className={`w-4 h-4 rounded-sm ${
-                            value === 0 ? "bg-gray-700" :
-                            value === 1 ? "bg-green-200" :
-                            value === 2 ? "bg-green-400" :
-                            value === 3 ? "bg-green-600" :
-                            "bg-green-800"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Bản mã</label>
+                <input
+                  type="text"
+                  value={selectedTool.code}
+                  className="mt-1 w-full p-2 bg-gray-200 rounded-lg border border-gray-300"
+                  readOnly
+                />
               </div>
-            </div>
-
-            {/* Chú thích */}
-            <div className="mt-4 flex justify-between items-center text-gray-400">
-              <button className="text-blue-400">Learn how we count contributions</button>
-
-              <div className="flex items-center space-x-2">
-                <span>Less</span>
-                <div className="w-4 h-4 bg-gray-700 rounded-sm"></div>
-                <div className="w-4 h-4 bg-green-200 rounded-sm"></div>
-                <div className="w-4 h-4 bg-green-400 rounded-sm"></div>
-                <div className="w-4 h-4 bg-green-600 rounded-sm"></div>
-                <div className="w-4 h-4 bg-green-800 rounded-sm"></div>
-                <span>More</span>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Cách thức thực hiện</label>
+                <textarea
+                  value={selectedTool.method}
+                  className="mt-1 w-full p-2 bg-gray-200 rounded-lg border border-gray-300 resize-none"
+                  rows="3"
+                  readOnly
+                />
               </div>
             </div>
           </div>
         </div>
-
-        {/* Contribution activity heading */}
-        <div className="mt-8">
-        </div>
-      </div>
-
-      {/* Buttons */}
-      <div className="fixed top-4 right-4">
-        <button className="text-blue-400">Customize your pins</button>
-      </div>
-      <div className="fixed top-4 right-20 flex flex-col items-end space-y-2">
-        <button className="px-4 py-2 bg-blue-600 rounded text-white font-semibold">2025</button>
-      </div>
+      )}
     </div>
   );
 };
 
 export default Profile;
+
+// CSS tùy chỉnh (nếu cần thêm vào file CSS hoặc trong <style>)
+// const customStyles = `
+//   @keyframes fade-in {
+//     from { opacity: 0; transform: translateY(10px); }
+//     to { opacity: 1; transform: translateY(0); }
+//   }
+//   .animate-fade-in {
+//     animation: fade-in 0.3s ease-out;
+//   }
+// `;

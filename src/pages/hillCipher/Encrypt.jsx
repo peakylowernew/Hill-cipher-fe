@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Link } from "react-router-dom";
 import { encryptText } from "../../api/hillCipher";
 import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
+
 function parseKeyMatrix(keyMatrixArray) {
     const parsedMatrix = [];
 
@@ -199,32 +201,43 @@ const Encrypt = () => {
                         </div>
                         <div>
                             <label className="block text-gray-700 mb-2">Chi tiết bước mã hóa</label>
-                            <div className="bg-gray-100 p-4 rounded h-full">
+                            {/* <div className="bg-gray-100 p-4 rounded h-full"> */}
                                 {steps && steps.length > 0 ? (
                                 <div className="mt-4 p-4 bg-gray-200 rounded">
                                 <h3 className="font-semibold">📌</h3>
                                 <ul className="list-disc list-inside text-sm space-y-2">
                                 {steps.map((step, index) => (
-                                    <div key={index}>
+                                    <div
+                                        key={index}
+                                        className="opacity-0 animate-fadeInUp"
+                                        style={{ animationDelay: `${index * 0.3}s` }}
+                                    >
                                         <p dangerouslySetInnerHTML={{ __html: step.key }} />
-                                        {step.details && step.details.map((detail, i) => (
-                                            <p 
-                                                key={i} 
-                                                style={{ marginLeft: "20px" }} 
-                                                dangerouslySetInnerHTML={{ __html: detail }} 
-                                            />
+                                        {step.details?.map((detail, i) => (
+                                        <p
+                                            key={i}
+                                            className="ml-5 opacity-0 animate-fadeInUp"
+                                            style={{ animationDelay: `${(index + i + 1) * 0.3}s` }}
+                                            dangerouslySetInnerHTML={{ __html: detail }}
+                                        />
                                         ))}
                                         <p>{step.step}</p>
                                     </div>
-                                ))}
+                                    ))}
                                 </ul>
                             </div>
                             
                                 ) : (
-                                    <p>🚀 Đang xử lý hoặc chưa có dữ liệu...</p>
+                                    <div>
+                                        <DotLottieReact
+                                            src="https://lottie.host/9da4ea67-0a55-43c3-a8a7-fb9937295561/Nqck7ppLJQ.lottie"
+                                            loop
+                                            autoplay
+                                        />
+                                    </div>
                                 )}
                             </div>
-                        </div>
+                        {/* </div> */}
                     </div>
                 </div>
             </div>

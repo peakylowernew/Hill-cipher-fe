@@ -18,14 +18,17 @@ const HillCipher = () => {
                 <i className="fas fa-chevron-down text-2xl"></i>
             </div>
             <div className="mt-4 flex flex-col items-center space-y-2">
-                <button className="bg-gray-500 text-white py-2 px-16 rounded transition duration-300 hover:bg-gray-700">
-                    <Link to='/encrypt'>Mã hóa</Link>
-                </button>
-                <button className="bg-white text-black py-2 px-4 rounded ">
-                    <Link to='/decrypt'>Giải mã</Link>
-                </button>
+                <Link to='/encrypt'>
+                    <button className="bg-gray-500 text-white py-2 px-16 rounded transition duration-300 hover:bg-gray-700">
+                        Mã hóa
+                    </button>
+                </Link>
+                <Link to='/decrypt'>
+                    <button className="bg-white text-black py-2 px-4 rounded ">
+                        Giải mã
+                    </button>
+                </Link>
             </div>
-           
         </div>
         <Footer />
         </div>
