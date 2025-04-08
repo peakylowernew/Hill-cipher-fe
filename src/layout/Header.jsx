@@ -43,6 +43,11 @@ const Header = () => {
             <div className="flex items-center space-x-2 min-w-0">
                 {user ? (
                     <>
+                        {/* <img
+                        // src="https://placehold.co/40x40"
+                        alt="User profile picture"
+                        className="rounded-full"
+                        /> */}
                         <span className="text-black font-bold truncate">
                             <Link to="/profile" className="hover:underline">{user.email}</Link>
                         </span>

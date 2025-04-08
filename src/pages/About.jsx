@@ -57,8 +57,7 @@ const About = () => {
                   <span className="text-2xl font-bold text-blue-600">PMT</span>
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800">Phạm Minh Trung</h3>
-                <p className="text-gray-600">Lập trình viên Full Stack</p>
-                <p className="text-gray-500 mt-2">Triển khai thuật toán</p>
+                <p className="text-gray-600">Full Stack</p>
               </div>
 
               {/* Member 2 */}
@@ -68,7 +67,6 @@ const About = () => {
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800">Huỳnh Quan Vinh</h3>
                 <p className="text-gray-600">Trưởng dự án & Full Stack</p>
-                <p className="text-gray-500 mt-2">Thiết kế UI/UX</p>
               </div>
 
               {/* Member 3 */}
@@ -77,8 +75,7 @@ const About = () => {
                   <span className="text-2xl font-bold text-purple-600">NPC</span>
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800">Nguyễn Phi Cường</h3>
-                <p className="text-gray-600">Lập trình viên Frontend</p>
-                <p className="text-gray-500 mt-2">Thiết kế UI/UX</p>
+                <p className="text-gray-600">Frontend</p>
               </div>
             </div>
           </div>
