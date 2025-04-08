@@ -1,58 +1,172 @@
 import Header from "../../layout/Header";
+import { useState, useMemo } from "react";
+import { FaBook, FaPhone, FaTimes } from "react-icons/fa"; // Sử dụng icon từ react-icons
+
 const avatar = "/image/avata2.jpg";
 
 const Profile = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTool, setSelectedTool] = useState(null); // Lưu thông tin công cụ được chọn để hiển thị trong modal
+
+  // Dữ liệu mẫu
+  const historyData = useMemo(
+    () => [
+      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
+      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
+      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
+      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
+      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
+      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
+      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
+      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
+      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
+      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
+      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
+      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
+      // Thêm dữ liệu mẫu nếu cần
+    ],
+    []
+  );
+
+  // Hàm mở modal và lưu thông tin công cụ được chọn
+  const openModal = (item) => {
+    setSelectedTool(item);
+    setIsModalOpen(true);
+  };
+
   return (
-    <div className="pt-16 flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white font-sans pt-16">
       <Header />
-      
-      <div className="bg-white shadow-lg p-10 rounded-2xl max-w-lg w-full transform transition-all hover:shadow-2xl hover:scale-105">
-        <div className="flex flex-col items-center space-y-8">
-          {/* Avatar with border and modern effect */}
-          <div className="relative">
-            <img
-              src={avatar}
-              alt="User Avatar"
-              className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-md transition-all duration-500 hover:scale-110"
-            />
-            <div className="absolute inset-0 rounded-full border-4 border-transparent bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 opacity-40"></div>
+      <main className="max-w-5xl mx-auto p-6 space-y-10">
+        {/* Thông tin người dùng */}
+        <section className="flex items-center gap-6 bg-gray-800/50 p-6 rounded-xl shadow-lg">
+          <img
+            src={avatar}
+            alt="User avatar"
+            className="rounded-full w-28 h-28 object-cover border-4 border-purple-500"
+          />
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold tracking-tight">Nguyễn Văn</h1>
+            <button className="mt-3 px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 rounded-lg text-white font-medium hover:from-red-600 hover:to-red-700 transition-all duration-300">
+              Edit Profile
+            </button>
           </div>
+        </section>
 
-          {/* Title with bold and stylish font */}
-          <h2 className="text-4xl font-extrabold text-gray-900 tracking-tight leading-tight hover:text-indigo-600 transition duration-300">
-            Nguyễn Văn HoMe
-          </h2>
-
-          {/* User information section */}
-          <div className="text-center space-y-4">
-            <p className="text-gray-800 text-lg flex items-center justify-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v6m0 0l3-3m-3 3l-3-3m9 13a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <span className="font-semibold">Ngày sinh:</span> 01/01/1990
-            </p>
-            <p className="text-gray-800 text-lg flex items-center justify-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4v16h14V4H5z"/>
-              </svg>
-              <span className="font-semibold">Số điện thoại:</span> 0123 456 789
-            </p>
-            <p className="text-gray-800 text-lg flex items-center justify-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 10l4 4-4 4M14 6l4 4-4 4"/>
-              </svg>
-              <span className="font-semibold">Đến từ:</span> Hồ Chí Minh
-            </p>
+        {/* Thông tin cá nhân */}
+        <section className="bg-gray-800/50 p-6 rounded-xl shadow-lg">
+          <h2 className="text-xl font-semibold mb-4">Thông tin cá nhân</h2>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <FaBook className="text-gray-400" />
+              <p className="text-blue-400">Email: nguyenvan@gmail.com</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <FaPhone className="text-gray-400" />
+              <p className="text-blue-400">Phone: 01928356</p>
+            </div>
           </div>
+        </section>
 
-          {/* Edit profile button with hover effects */}
-          <button className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-full font-medium hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition duration-300 transform hover:scale-105">
-            Chỉnh sửa hồ sơ
-          </button>
+        {/* Lịch sử sử dụng công cụ */}
+        <section className="bg-gray-800/50 p-6 rounded-xl shadow-lg">
+          <h2 className="text-xl font-semibold mb-4">Tool usage history</h2>
+          <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700">
+            <table className="w-full text-sm text-left">
+              <thead className="sticky top-0 bg-gray-800/80 text-gray-300">
+                <tr className="border-b border-gray-600">
+                  <th className="p-3">Tools</th>
+                  <th className="p-3">Day</th>
+                  <th className="p-3 text-right">detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                {historyData.length > 0 ? (
+                  historyData.map((item) => (
+                    <tr key={item.id} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
+                      <td className="p-3">{item.tool}</td>
+                      <td className="p-3">{item.day}</td>
+                      <td className="p-3 text-right">
+                        <button
+                          onClick={() => openModal(item)}
+                          className="text-blue-400 underline hover:text-blue-300 transition-colors"
+                        >
+                          {item.content}
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="p-3 text-center text-gray-400">
+                      Không có dữ liệu
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      {/* Modal */}
+      {isModalOpen && selectedTool && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
+          <div className="bg-gray-100 p-6 rounded-xl w-full max-w-md text-gray-800 shadow-2xl animate-fade-in">
+            <div className="flex justify-between items-center mb-5">
+              <h3 className="text-xl font-semibold">Chi tiết công cụ</h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                <FaTimes size={20} />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Khóa</label>
+                <input
+                  type="text"
+                  value={selectedTool.key}
+                  className="mt-1 w-full p-2 bg-gray-200 rounded-lg border border-gray-300"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Bản mã</label>
+                <input
+                  type="text"
+                  value={selectedTool.code}
+                  className="mt-1 w-full p-2 bg-gray-200 rounded-lg border border-gray-300"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Cách thức thực hiện</label>
+                <textarea
+                  value={selectedTool.method}
+                  className="mt-1 w-full p-2 bg-gray-200 rounded-lg border border-gray-300 resize-none"
+                  rows="3"
+                  readOnly
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
 export default Profile;
+
+// CSS tùy chỉnh (nếu cần thêm vào file CSS hoặc trong <style>)
+// const customStyles = `
+//   @keyframes fade-in {
+//     from { opacity: 0; transform: translateY(10px); }
+//     to { opacity: 1; transform: translateY(0); }
+//   }
+//   .animate-fade-in {
+//     animation: fade-in 0.3s ease-out;
+//   }
+// `;

@@ -8,7 +8,7 @@ const Docs = () => {
   return (
     <div>
     <Header/>
-      <div className="pt-16 max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <div className="pt-16 max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-10 tracking-tight">
           Tài Liệu
         </h1>
@@ -89,13 +89,8 @@ const Docs = () => {
             </div>
           </section>
         </div>
+            </div>
 
-        <div className="text-center mt-8">
-          <button className="px-6 py-3 bg-gray-800 text-white rounded-full font-medium hover:bg-gray-900 focus:ring-4 focus:ring-gray-300 transition duration-300">
-            Quay lại trang chủ
-          </button>
-        </div>
-    </div> 
     <Footer/>
     </div>
   );
