@@ -5,7 +5,7 @@ import Login from "./components/login/Login";
 import Signup from "./components/signup/Signup";
 import Profile from "./components/users/Profile";
 import Docs from "./pages/Docs";
-import Abouts from "./pages/About";
+import About from "./pages/About";
 import Encrypt from "./pages/hillCipher/Encrypt";
 import Decrypt from "./pages/hillCipher/Decrypt";
 
@@ -21,7 +21,7 @@ function App() {
         <Route path="/encrypt" element={<Encrypt />} />
         <Route path="/decrypt" element={<Decrypt />} />
         <Route path="/docs" element={<Docs />} />
-        <Route path="/abouts" element={<Abouts />} />
+        <Route path="/about" element={<About />} />
 
       </Routes>
     </Router>
