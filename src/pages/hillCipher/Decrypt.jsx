@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, Link } from "react-router-dom";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { decryptText } from "../../api/hillCipher";
 import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
+
 function parseKeyMatrix(keyMatrixArray) {
     const parsedMatrix = [];
 
@@ -11,21 +12,16 @@ function parseKeyMatrix(keyMatrixArray) {
         const item = keyMatrixArray[i];
         const char = item.toString().toUpperCase();
 
-        // Nếu là chữ cái A-Z
         if (/^[A-Z]$/.test(char)) {
             parsedMatrix.push(char.charCodeAt(0) - 65);
-        }
-        // Nếu là số trong khoảng từ 0 đến 25
-        else if (/^\d{1,2}$/.test(char)) {
+        } else if (/^\d{1,2}$/.test(char)) {
             const number = parseInt(char, 10);
             if (number >= 0 && number <= 25) {
                 parsedMatrix.push(number);
             } else {
                 throw new Error(`Số phải trong khoảng từ 0 đến 25, nhưng nhận được: ${number}`);
             }
-        }
-        // Nếu không hợp lệ
-        else {
+        } else {
             throw new Error(`Ký tự không hợp lệ trong ma trận khóa: ${item}`);
         }
     }
@@ -34,6 +30,8 @@ function parseKeyMatrix(keyMatrixArray) {
 }
 
 const Decrypt = () => {
+    const location = useLocation();
+    // const navigate = useNavigate();
     const [plainText, setPlainText] = useState(""); 
     const [cipherText, setCipherText] = useState("");
     const [keyMatrix, setKeyMatrix] = useState([]);
@@ -42,45 +40,73 @@ const Decrypt = () => {
     const [showMatrix, setShowMatrix] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const text = params.get("text");
+        const len = params.get("len");
+        const keyMatrixStr = params.get("keyMatrix"); // Lấy ma trận khóa từ URL
+        if (text && len) {
+            setPlainText(decodeURIComponent(text)); // Giải mã văn bản
+    
+            // Kiểm tra và xác định kích thước ma trận khóa
+            const size = Math.ceil(Math.sqrt(parseInt(len, 10)));
+            if (size >= 2) {
+                setMatrixSize(size); // Lưu kích thước ma trận
+    
+                // Khởi tạo ma trận khóa trống với đúng kích thước
+                const initialMatrix = Array(size * size).fill("");
+                setKeyMatrix(initialMatrix); // Khởi tạo ma trận khóa
+                setShowMatrix(true);
+            }
+        }
+    
+        if (keyMatrixStr) {
+            try {
+                // Giải mã và chuyển ma trận khóa từ chuỗi JSON trong URL
+                const parsedKeyMatrix = JSON.parse(decodeURIComponent(keyMatrixStr));
+                setKeyMatrix(parsedKeyMatrix); // Cập nhật ma trận khóa
+            } catch (error) {
+                console.error("Lỗi khi giải mã khóa:", error);
+            }
+        }
+    }, [location]);
+    
 
-const handleDecrypt = async () => {
-        setErrorMessage(""); // Reset error message
-        setCipherText("");   // Clear previous ciphertext
-        setSteps([]);        // Clear previous steps
+    const handleDecrypt = async () => {
+        setErrorMessage("");
+        setCipherText("");
+        setSteps([]);
     
         if (!plainText.trim() || keyMatrix.some(val => val === "")) {
-            alert("Vui lòng nhập đầy đủ dữ liệu!"); // Ensure all fields are filled
+            alert("Vui lòng nhập đầy đủ dữ liệu!");
             return;
         }
     
-        try {
-            // Parse the keyMatrix and attempt to decrypt the text
-            const result = await decryptText(plainText.trim(), parseKeyMatrix(keyMatrix));
+        const originalLength = parseInt(new URLSearchParams(location.search).get("len"), 10);  // Lấy độ dài văn bản gốc từ URL
     
-            // Check if result is valid
+        try {
+            const result = await decryptText(plainText.trim(), parseKeyMatrix(keyMatrix), originalLength);  // Thêm originalLength
+    
             if (result && result.decryptedText && Array.isArray(result.steps)) {
-                setCipherText(result.decryptedText);
+                // Cắt văn bản giải mã theo độ dài văn bản gốc
+                const decryptedText = result.decryptedText.substring(0, originalLength); // Cắt đi phần thừa
+                setCipherText(decryptedText);
                 setSteps(result.steps);
             } else {
                 setErrorMessage("Dữ liệu trả về không hợp lệ!");
             }
     
         } catch (error) {
-            // Log the error for debugging purposes
             console.error("Lỗi khi giải mã:", error);
             console.log("Full error object:", JSON.stringify(error, null, 2));
     
-            // Check if the error response is from the server and contains an error message
             const message = 
-  error?.response?.data?.error ||  // Kiểm tra xem có lỗi từ response của server không
-  error?.message ||                 // Kiểm tra lỗi chung từ error object
-  "Đã xảy ra lỗi không xác định!"; 
-    
-            // Update the error message state to display the error
+                error?.response?.data?.error || 
+                error?.message || 
+                "Đã xảy ra lỗi không xác định!"; 
             setErrorMessage(message); 
         }
     };
-    
 
     const handleMatrixSizeChange = (e) => {
         const size = parseInt(e.target.value);
@@ -96,6 +122,7 @@ const handleDecrypt = async () => {
             alert("Kích thước ma trận phải từ 2x2 trở lên!");
         }
     };
+
     const handleKeyMatrixChange = (index, value) => {
         const newKeyMatrix = [...keyMatrix];
 
@@ -104,23 +131,20 @@ const handleDecrypt = async () => {
             setKeyMatrix(newKeyMatrix);
             return;
         }
-    
-        // Nếu là chữ cái (A-Z)
+
         if (/^[A-Za-z]$/.test(value)) {
             newKeyMatrix[index] = value.toUpperCase();
-        }
-        // Nếu là số trong khoảng 0-25
-        else if (/^\d{1,2}$/.test(value)) {
+        } else if (/^\d{1,2}$/.test(value)) {
             const number = parseInt(value, 10);
             if (number >= 0 && number <= 25) {
                 newKeyMatrix[index] = number;
             } else {
                 alert("Số phải trong khoảng từ 0 đến 25");
-                return; // Nếu số ngoài phạm vi, không cập nhật giá trị
+                return;
             }
         } else {
             alert("Vui lòng nhập chữ cái (A-Z) hoặc số trong khoảng từ 0 đến 25");
-            return; // Nếu giá trị không hợp lệ, không cập nhật
+            return;
         }
         setKeyMatrix(newKeyMatrix);
     };
@@ -179,7 +203,6 @@ const handleDecrypt = async () => {
                                                 className="p-2 border rounded w-full text-center"
                                                 value={keyMatrix[index]}
                                                 onChange={(e) => handleKeyMatrixChange(index, e.target.value)}
-                                                // maxLength={1}
                                             />
                                         ))}
                                     </div>
@@ -194,7 +217,7 @@ const handleDecrypt = async () => {
                                     Giải mã
                                 </button>
                                 {errorMessage && (
-                                     <div className="text-red-600 font-semibold bg-red-100 border border-red-400 px-4 py-2 rounded mt-2">
+                                    <div className="text-red-600 font-semibold bg-red-100 border border-red-400 px-4 py-2 rounded mt-2">
                                         ⚠️ {errorMessage}
                                     </div>
                                 )}
@@ -216,42 +239,40 @@ const handleDecrypt = async () => {
                         </div>
                         <div>
                             <label className="block text-gray-700 mb-2">Chi tiết bước giải mã</label>
-                            {/* <div className="bg-gray-100 p-4 rounded h-full"> */}
-                                {steps && steps.length > 0 ? (
-                                    <div className="mt-4 p-4 bg-gray-200 rounded">
-                                        <h3 className="font-semibold">📌</h3>
-                                        <ul className="list-disc list-inside text-sm space-y-2">
-                                            {steps.map((step, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="opacity-0 animate-fadeInUp"
-                                                    style={{ animationDelay: `${index * 0.3}s` }}
-                                                >
-                                                    <p dangerouslySetInnerHTML={{ __html: step.key }} />
-                                                    {step.details && step.details.map((detail, i) => (
-                                                        <p 
-                                                            key={i} 
-                                                            className="ml-5 opacity-0 animate-fadeInUp"
-                                                            style={{ animationDelay: `${(index + i + 1) * 0.3}s` }}
-                                                            dangerouslySetInnerHTML={{ __html: detail }} 
-                                                        />
-                                                    ))}
-                                                    <p>{step.step}</p>
-                                                </div>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                ) : (
-                                    <div>
-                                        <DotLottieReact
-                                            src="https://lottie.host/9da4ea67-0a55-43c3-a8a7-fb9937295561/Nqck7ppLJQ.lottie"
-                                            loop
-                                            autoplay
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        {/* </div> */}
+                            {steps && steps.length > 0 ? (
+                                <div className="mt-4 p-4 bg-gray-200 rounded">
+                                    <h3 className="font-semibold">📌</h3>
+                                    <ul className="list-disc list-inside text-sm space-y-2">
+                                        {steps.map((step, index) => (
+                                            <div
+                                                key={index}
+                                                className="opacity-0 animate-fadeInUp"
+                                                style={{ animationDelay: `${index * 0.3}s` }}
+                                            >
+                                                <p dangerouslySetInnerHTML={{ __html: step.key }} />
+                                                {step.details && step.details.map((detail, i) => (
+                                                    <p 
+                                                        key={i} 
+                                                        className="ml-5 opacity-0 animate-fadeInUp"
+                                                        style={{ animationDelay: `${(index + i + 1) * 0.3}s` }}
+                                                        dangerouslySetInnerHTML={{ __html: detail }} 
+                                                    />
+                                                ))}
+                                                <p>{step.step}</p>
+                                            </div>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ) : (
+                                <div>
+                                    <DotLottieReact
+                                        src="https://lottie.host/9da4ea67-0a55-43c3-a8a7-fb9937295561/Nqck7ppLJQ.lottie"
+                                        loop
+                                        autoplay
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

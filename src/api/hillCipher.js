@@ -45,7 +45,7 @@ export async function decryptText(text, keyMatrixString) {
         let matrixSize = Math.sqrt(keyMatrix.length);
 
         let formattedKeyMatrix = [];
-        for (let i = 0; i < matrixSize; i++) {clcl
+        for (let i = 0; i < matrixSize; i++) {
             formattedKeyMatrix.push(keyMatrix.slice(i * matrixSize, (i + 1) * matrixSize));
         }
 
