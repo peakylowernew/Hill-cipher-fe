@@ -42,8 +42,8 @@ const Decrypt = () => {
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
-        const text = params.get("text");
-        const len = params.get("len");
+        const text = params.get("text");// van ban da ma hoas
+        const len = params.get("len"); 
         const keyMatrixStr = params.get("keyMatrix"); // Lấy ma trận khóa từ URL
         if (text && len) {
             setPlainText(decodeURIComponent(text)); // Giải mã văn bản
@@ -82,7 +82,7 @@ const Decrypt = () => {
             return;
         }
     
-        const originalLength = parseInt(new URLSearchParams(location.search).get("len"), 10);  // Lấy độ dài văn bản gốc từ URL
+        const originalLength = parseInt(new URLSearchParams(location.search).get("plaintext"), 10);  // Lấy độ dài văn bản gốc từ URL
     
         try {
             const result = await decryptText(plainText.trim(), parseKeyMatrix(keyMatrix), originalLength);  // Thêm originalLength
