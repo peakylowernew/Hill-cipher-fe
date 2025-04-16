@@ -110,7 +110,7 @@ const Encrypt = () => {
 
     const handleDecryptionRedirect = (e) => {
         e.preventDefault();
-        navigate(`/decrypt?text=${encodeURIComponent(cipherText)}&len=${keyMatrix.length}&keyMatrix=${encodeURIComponent(JSON.stringify(keyMatrix))}`);
+        navigate(`/decrypt?text=${encodeURIComponent(cipherText)}&plaintext=${plainText.length}&len=${keyMatrix.length}&keyMatrix=${encodeURIComponent(JSON.stringify(keyMatrix))}`);
     };
 
     return (
