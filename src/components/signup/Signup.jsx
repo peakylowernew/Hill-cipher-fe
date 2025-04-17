@@ -1,14 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/auth/signup", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -19,7 +22,7 @@ const Signup = () => {
       const data = await response.json();
       if (response.ok) {
         alert("Đăng ký thành công!");
-        window.location.href = "/login"; // Chuyển hướng đến trang login
+        navigate("/login");
       } else {
         setError(data.message || "Đăng ký thất bại");
       }
