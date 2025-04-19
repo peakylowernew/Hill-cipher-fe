@@ -69,7 +69,10 @@ const Profile = () => {
             className="rounded-full w-28 h-28 object-cover border-4 border-purple-500"
           />
           <div className="flex-1">
-            <h1 className="text-3xl font-bold tracking-tight">{user?.name || "Đang tải..."}</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {/* {user?.name || "Đang tải..."} */}
+              {user?.email ? user.email.split('@')[0] : "Đang tải..."}
+              </h1>
             <button className="mt-3 px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 rounded-lg text-white font-medium hover:from-red-600 hover:to-red-700 transition-all duration-300">
               Edit Profile
             </button>

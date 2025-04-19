@@ -54,7 +54,11 @@ const Header = () => {
                 {user ? (
                     <>
                         <span className="text-black font-bold truncate">
-                            <Link to="/profile" className="hover:underline">{user.email}</Link>
+                        <Link to="/profile">
+                            <button className="bg-white text-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white">
+                                {user?.email ? user.email.split('@')[0] : "Đang tải..."}
+                            </button>
+                        </Link>
                         </span>
                         <button
                             onClick={handleLogout}
