@@ -78,12 +78,12 @@ export default function Home() {
                           <h3 className="font-semibold text-slate-800">Matrix Operations</h3>
                           <p className="text-slate-600 mt-2">Linear algebra meets cryptography</p>
                         </div> */}
-                        <div className="">
+                        <div className="flex items-center justify-center w-full h-full md:w-[300px] md:h-[200px] transition-all duration-300">
                           <DotLottieReact
                             src="https://lottie.host/fbead96f-094e-4732-919e-387ebfda72fc/wlkcjZatwQ.lottie"
                             loop
                             autoplay
-                            style={{ width: '300px', height: '200px' }}
+                            style={{ width: '100%', height: '100%', maxWidth: '300px', maxHeight: '200px' }}
                           />
                         </div>
                       </div>
