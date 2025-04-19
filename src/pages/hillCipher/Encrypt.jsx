@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom"; // Hook cho React Router v6+
 import { encryptText } from "../../api/hillCipher";
 import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
+import { jwtDecode } from "jwt-decode"; // ma hoa token
+import { getUid, getToken } from "../../utils/auth.js";
 
 function parseKeyMatrix(keyMatrixArray) {
     const parsedMatrix = [];
@@ -36,22 +38,44 @@ const Encrypt = () => {
     const [matrixSize, setMatrixSize] = useState(0);
     const [steps, setSteps] = useState([]);
     const [showMatrix, setShowMatrix] = useState(false);
-
-    const navigate = useNavigate(); // Hook cho điều hướng
-
+    const navigate = useNavigate();
+    const userId = getUid();
     // Hàm mã hóa
     const handleEncrypt = async (e) => {
-        e.preventDefault();  // Ngừng hành vi gửi form mặc định
+        e.preventDefault();
+    
 
-        if (!plainText.trim() || keyMatrix.some(val => val === "")) {
+        if (!plainText.trim() || keyMatrix.some(val => val === "" || !userId)) {
             alert("Vui lòng nhập đầy đủ dữ liệu!");
             return;
         }
-
+    
         try {
-            const response = await encryptText(plainText.trim(), parseKeyMatrix(keyMatrix));
-            console.log("Dữ liệu trả về từ encryptText:", response);
-
+            const token = getToken();
+            const uid = getUid();
+                  
+                    if (token && uid) {
+                      const decoded = jwtDecode(token);
+                    //   console.log(" Token:", decoded); // In ra toàn bộ payload của token
+                    //   console.log(" Uid:", uid); // In ra toàn bộ payload của uid
+            
+                      if (decoded.email) {
+                        // setUser({ email: decoded.email, uid });
+                      } else {
+                        console.error("Không tìm thấy email trong token", decoded);
+                      }
+                    } else {
+                      console.error("Không tìm thấy token hoặc uid trong storage");
+                    }
+                  
+            
+               
+            const response = await encryptText(
+                plainText.trim(),
+                parseKeyMatrix(keyMatrix),
+                uid
+            );
+    
             if (response && response.encryptedText && Array.isArray(response.processSteps)) {
                 setCipherText(response.encryptedText);
                 setSteps(response.processSteps);
@@ -65,6 +89,7 @@ const Encrypt = () => {
             alert("Có lỗi trong quá trình mã hóa!");
         }
     };
+    
 
     const handleMatrixSizeChange = (e) => {
         const size = parseInt(e.target.value);

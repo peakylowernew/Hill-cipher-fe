@@ -1,27 +1,37 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // ma hoa token
+import { getUid, getToken } from "../utils/auth.js";
 
 const Header = () => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
-
+  
     useEffect(() => {
-        // Retrieve the user object from localStorage
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            try {
-                setUser(JSON.parse(storedUser));
-            } catch (error) {
-                console.error("Error parsing JSON:", error);
-                localStorage.removeItem("user"); // Remove invalid data
-            }
-        }
-    }, []);
+        const token = getToken();
+        const uid = getUid();
+      
+        if (token && uid) {
+          const decoded = jwtDecode(token);
+          console.log(" Token:", decoded); // In ra toàn bộ payload của token
+          console.log(" Uid:", uid); // In ra toàn bộ payload của uid
 
+          if (decoded.email) {
+            setUser({ email: decoded.email, uid: uid });
+          } else {
+            console.error("Không tìm thấy email trong token", decoded);
+          }
+        } else {
+          console.error("Không tìm thấy token hoặc uid trong storage");
+        }
+      }, []);
+      
+  
     const handleLogout = () => {
-        localStorage.removeItem("user"); // Remove user from localStorage
-        setUser(null);
-        navigate("/");
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("uid");
+      setUser(null); // Clear user state
+      navigate("/");
     };
 
     return (
@@ -43,11 +53,6 @@ const Header = () => {
             <div className="flex items-center space-x-2 min-w-0">
                 {user ? (
                     <>
-                        {/* <img
-                        // src="https://placehold.co/40x40"
-                        alt="User profile picture"
-                        className="rounded-full"
-                        /> */}
                         <span className="text-black font-bold truncate">
                             <Link to="/profile" className="hover:underline">{user.email}</Link>
                         </span>

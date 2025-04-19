@@ -1,34 +1,57 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Header from "../../layout/Header";
-import { useState, useMemo } from "react";
-import { FaBook, FaPhone, FaTimes } from "react-icons/fa"; // Sử dụng icon từ react-icons
-
-const avatar = "/image/avata2.jpg";
+import { FaBook, FaPhone, FaTimes } from "react-icons/fa";
+import { getUid } from "../../utils/auth";
 
 const Profile = () => {
+  const [user, setUser] = useState(null);
+  const [historyData,setHistoryData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTool, setSelectedTool] = useState(null); // Lưu thông tin công cụ được chọn để hiển thị trong modal
+  const [selectedTool, setSelectedTool] = useState(null);
 
-  // Dữ liệu mẫu
-  const historyData = useMemo(
-    () => [
-      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
-      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
-      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
-      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
-      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
-      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
-      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
-      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
-      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
-      { id: 1, tool: "Encrypt", day: "Sunday 9:30 AM", content: "detail" },
-      { id: 2, tool: "Decrypt", day: "Sunday 6:00 AM", content: "detail" },
-      { id: 3, tool: "Encrypt", day: "Thursday 8:20 AM", content: "detail"},
-      // Thêm dữ liệu mẫu nếu cần
-    ],
-    []
-  );
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const uid = getUid();
+      if (!uid) {
+        console.error("Không tìm thấy UID người dùng.");
+        return;
+      }
 
-  // Hàm mở modal và lưu thông tin công cụ được chọn
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/user/${uid}`);
+        if (response.data) {
+          // console.log("Thông tin người dùng:", response.data);
+          setUser(response.data);
+          fetchHistory(uid);
+        } else {
+          console.error("Không tìm thấy người dùng với UID:", uid);
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+        if (error.response && error.response.status === 404) {
+          alert("Người dùng không tồn tại.");
+        } else {
+          alert("Có lỗi xảy ra. Vui lòng thử lại sau.");
+        }
+      }
+    };
+    
+  const fetchHistory = async (uid) => {
+
+    try {
+      console.log("uid ",uid);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/history/${uid}`);
+      setHistoryData(res.data.history || []);
+    } catch (error) {
+      console.error("Lỗi khi lấy lịch sử:", error);
+      setHistoryData([]);
+    }
+  };
+
+    fetchUserData();
+  }, []);
+
   const openModal = (item) => {
     setSelectedTool(item);
     setIsModalOpen(true);
@@ -41,12 +64,12 @@ const Profile = () => {
         {/* Thông tin người dùng */}
         <section className="flex items-center gap-6 bg-gray-800/50 p-6 rounded-xl shadow-lg">
           <img
-            src={avatar}
+            src={user?.avatar || "/image/avata2.jpg"}
             alt="User avatar"
             className="rounded-full w-28 h-28 object-cover border-4 border-purple-500"
           />
           <div className="flex-1">
-            <h1 className="text-3xl font-bold tracking-tight">Nguyễn Văn</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{user?.name || "Đang tải..."}</h1>
             <button className="mt-3 px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 rounded-lg text-white font-medium hover:from-red-600 hover:to-red-700 transition-all duration-300">
               Edit Profile
             </button>
@@ -59,11 +82,11 @@ const Profile = () => {
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <FaBook className="text-gray-400" />
-              <p className="text-blue-400">Email: nguyenvan@gmail.com</p>
+              <p className="text-blue-400">Email: {user?.email || "Đang tải..."}</p>
             </div>
             <div className="flex items-center gap-3">
               <FaPhone className="text-gray-400" />
-              <p className="text-blue-400">Phone: 01928356</p>
+              <p className="text-blue-400">Phone: {user?.phone || "Chưa cập nhật"}</p>
             </div>
           </div>
         </section>
@@ -81,92 +104,108 @@ const Profile = () => {
                 </tr>
               </thead>
               <tbody>
-                {historyData.length > 0 ? (
+                {historyData?.length > 0 ? (
                   historyData.map((item) => (
-                    <tr key={item.id} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
-                      <td className="p-3">{item.tool}</td>
-                      <td className="p-3">{item.day}</td>
+                    <tr key={item.id || item.timestamp} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
+                       <td className="p-3 capitalize">{item.action}</td>
+                       <td className="p-3">
+                          {item.timestamp? new Date(item.timestamp._seconds * 1000).toLocaleString() : "N/A"}
+                        </td>
                       <td className="p-3 text-right">
                         <button
                           onClick={() => openModal(item)}
                           className="text-blue-400 underline hover:text-blue-300 transition-colors"
                         >
-                          {item.content}
+                          Xem chi tiết
                         </button>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="3" className="p-3 text-center text-gray-400">
-                      Không có dữ liệu
-                    </td>
+                    <td colSpan="3" className="text-center py-5">Không có lịch sử sử dụng.</td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
         </section>
-      </main>
 
-      {/* Modal */}
-      {isModalOpen && selectedTool && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50">
-          <div className="bg-gray-100 p-6 rounded-xl w-full max-w-md text-gray-800 shadow-2xl animate-fade-in">
-            <div className="flex justify-between items-center mb-5">
-              <h3 className="text-xl font-semibold">Chi tiết công cụ</h3>
+                {/* Modal hiển thị chi tiết lịch sử */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-gray-800/50 z-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-xl max-w-lg text-gray-800">
+              <h3 className="text-xl font-bold mb-4">{selectedTool?.tool}</h3>
+              <p><strong>Hành động:</strong> {selectedTool?.action}</p>
+              <p><strong>Input:</strong> {selectedTool?.input}</p>
+              <p><strong>Output:</strong> {selectedTool?.output}</p>
+              <p><strong>Key:</strong> {selectedTool?.key}</p>
+              <p><strong>Bước thực hiện:</strong></p>
+              <div className="space-y-3 mt-2 text-sm text-gray-700">
+                {Array.isArray(selectedTool?.steps) && selectedTool.steps.length > 0 ? (
+                  selectedTool.steps.map((stepStr, i) => {
+                    if (typeof stepStr === 'string') {
+                      // Thử parse để xem có phải là JSON object không
+                      try {
+                        const parsed = JSON.parse(stepStr);
+                        if (typeof parsed === 'object' && parsed.step) {
+                          // Là JSON object hợp lệ
+                          return (
+                            <div key={i} className="border-l-4 border-purple-500 pl-3">
+                              <p dangerouslySetInnerHTML={{ __html: `<strong>${parsed.step}</strong>` }} />
+                              {parsed.details && (
+                                <ul className="list-disc ml-5 mt-1">
+                                  {parsed.details.map((detail, j) => (
+                                    <li key={j} dangerouslySetInnerHTML={{ __html: detail }} />
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          );
+                        } else {
+                          // Là chuỗi thường, hiển thị luôn
+                          return <p key={i} dangerouslySetInnerHTML={{ __html: stepStr }} />;
+                        }
+                      } catch (e) {
+                        // Không parse được, hiển thị như chuỗi
+                        return <p key={i} dangerouslySetInnerHTML={{ __html: stepStr }} />;
+                      }
+                    } else if (typeof stepStr === 'object' && stepStr.step) {
+                      // Trường hợp dữ liệu là object chứ không phải string
+                      return (
+                        <div key={i} className="border-l-4 border-purple-500 pl-3">
+                          <p dangerouslySetInnerHTML={{ __html: `<strong>${stepStr.step}</strong>` }} />
+                          {stepStr.details && (
+                            <ul className="list-disc ml-5 mt-1">
+                              {stepStr.details.map((detail, j) => (
+                                <li key={j} dangerouslySetInnerHTML={{ __html: detail }} />
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      );
+                    } else {
+                      return <p key={i}>Không thể hiển thị bước {i + 1}</p>;
+                    }
+                  })
+                ) : (
+                  <p>Không có bước nào.</p>
+                )}
+              </div>
+              <p><strong>Thời gian:</strong> {selectedTool?.timestamp ? new Date(selectedTool.timestamp._seconds * 1000).toLocaleString() : "N/A"}</p>
               <button
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center gap-2"
                 onClick={() => setIsModalOpen(false)}
-                className="text-gray-600 hover:text-gray-800 transition-colors"
               >
-                <FaTimes size={20} />
+                <FaTimes /> Đóng
               </button>
             </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Khóa</label>
-                <input
-                  type="text"
-                  value={selectedTool.key}
-                  className="mt-1 w-full p-2 bg-gray-200 rounded-lg border border-gray-300"
-                  readOnly
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Bản mã</label>
-                <input
-                  type="text"
-                  value={selectedTool.code}
-                  className="mt-1 w-full p-2 bg-gray-200 rounded-lg border border-gray-300"
-                  readOnly
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Cách thức thực hiện</label>
-                <textarea
-                  value={selectedTool.method}
-                  className="mt-1 w-full p-2 bg-gray-200 rounded-lg border border-gray-300 resize-none"
-                  rows="3"
-                  readOnly
-                />
-              </div>
-            </div>
           </div>
-        </div>
-      )}
+        )}
+
+      </main>
     </div>
   );
 };
 
 export default Profile;
-
-// CSS tùy chỉnh (nếu cần thêm vào file CSS hoặc trong <style>)
-// const customStyles = `
-//   @keyframes fade-in {
-//     from { opacity: 0; transform: translateY(10px); }
-//     to { opacity: 1; transform: translateY(0); }
-//   }
-//   .animate-fade-in {
-//     animation: fade-in 0.3s ease-out;
-//   }
-// `;
