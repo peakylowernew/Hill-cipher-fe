@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { login } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // dùng để giải mã token để lấy UIDUID
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,19 +17,29 @@ const Login = () => {
     setError(null);
 
     try {
-        const response = await login(email, password);
-        console.log("Đăng nhập thành công:", response);
-
-        // Lưu thông tin user vào localStorage
-        localStorage.setItem("user", JSON.stringify({ email, token: response.token }));
-
-        navigate("/profile"); // Chuyển hướng đến trang Profile
+      const response = await login(email, password);
+      console.log("Đăng nhập thành công:", response);
+  
+      if (response && response.token) {
+        const token = response.token;
+        const decoded = jwtDecode(token);
+        const uid = decoded.uid;
+  
+        if (!uid) throw new Error("Không tìm thấy uid trong token");
+        
+        localStorage.setItem("token", token);
+        localStorage.setItem("uid", uid);
+        navigate("/profile");
+      } else {
+        throw new Error("Không có dữ liệu từ server");
+      }
     } catch (err) {
-        setError("Đăng nhập thất bại. Vui lòng kiểm tra lại.");
+      console.error("Lỗi đăng nhập:", err);
+      setError("Đăng nhập thất bại. Vui lòng kiểm tra lại.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-500 to-gray-700">

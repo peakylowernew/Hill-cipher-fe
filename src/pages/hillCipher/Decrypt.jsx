@@ -4,6 +4,7 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { decryptText } from "../../api/hillCipher";
 import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
+import { getUid } from "../../utils/auth";
 
 function parseKeyMatrix(keyMatrixArray) {
     const parsedMatrix = [];
@@ -31,7 +32,6 @@ function parseKeyMatrix(keyMatrixArray) {
 
 const Decrypt = () => {
     const location = useLocation();
-    // const navigate = useNavigate();
     const [plainText, setPlainText] = useState(""); 
     const [cipherText, setCipherText] = useState("");
     const [keyMatrix, setKeyMatrix] = useState([]);
@@ -39,6 +39,7 @@ const Decrypt = () => {
     const [steps, setSteps] = useState([]);
     const [showMatrix, setShowMatrix] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const userId = getUid();
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -77,16 +78,23 @@ const Decrypt = () => {
         setCipherText("");
         setSteps([]);
     
-        if (!plainText.trim() || keyMatrix.some(val => val === "")) {
+        if (!plainText.trim() || keyMatrix.some(val => val === "" || !userId)) {
             alert("Vui lòng nhập đầy đủ dữ liệu!");
             return;
         }
     
         const originalLength = parseInt(new URLSearchParams(location.search).get("plaintext"), 10);  // Lấy độ dài văn bản gốc từ URL
-    
+        
         try {
-            const result = await decryptText(plainText.trim(), parseKeyMatrix(keyMatrix), originalLength);  // Thêm originalLength
-    
+            const uid = getUid();
+
+            const result = await decryptText(
+                plainText.trim(),
+                parseKeyMatrix(keyMatrix),
+                // originalLength,
+                uid
+            );
+
             if (result && result.decryptedText && Array.isArray(result.steps)) {
                 // Cắt văn bản giải mã theo độ dài văn bản gốc
                 const decryptedText = result.decryptedText.substring(0, originalLength); // Cắt đi phần thừa
