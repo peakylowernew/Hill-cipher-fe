@@ -44,13 +44,13 @@ export default function Home() {
                       <h1 className="text-5xl font-bold text-slate-800 animate-fade-in">
                         Hill Cipher
                         <span className="block text-2xl text-slate-600 mt-2">
-                          Advanced Matrix-Based Encryption
+                          Mã hóa dựa trên ma trận nâng cao
                         </span>
                       </h1>
                       <p className="text-lg text-slate-600 leading-relaxed">
-                        Discover the power of mathematical encryption using matrices. 
-                        The Hill cipher transforms your messages into unbreakable code 
-                        using linear algebra principles.
+                          Khám phá sức mạnh của mã hóa toán học bằng ma trận.
+                          Mã Hill chuyển đổi thông điệp của bạn thành mã không thể phá vỡ
+                          bằng các nguyên tắc đại số tuyến tính.
                       </p>
                       <div className="flex items-center gap-4 animate-slide-up">
                         <button 
@@ -58,7 +58,7 @@ export default function Home() {
                             flex items-center gap-2 hover:bg-indigo-700 transition-colors"
                             onClick={handleTryItNow} // Add onClick handler
                         >
-                          Try it Now <RiArrowRightSLine size={20} />
+                          Hãy thử ngay bây giờ <RiArrowRightSLine size={20} />
                         </button>
                       </div>
                     </div>
@@ -69,8 +69,8 @@ export default function Home() {
                         <div className="bg-white p-4 rounded-lg shadow-xl transform hover:scale-105 
                           transition-transform">
                           <RiLockLine className="w-10 h-10 text-indigo-600 mb-4" />
-                          <h3 className="font-semibold text-slate-800">Secure Encryption</h3>
-                          <p className="text-slate-600 mt-2">Matrix-based encryption for enhanced security</p>
+                          <h3 className="font-semibold text-slate-800">Mã hóa an toàn</h3>
+                          <p className="text-slate-600 mt-2">Mã hóa dựa trên ma trận để tăng cường bảo mật</p>
                         </div>
                         {/* <div className="bg-white p-6 rounded-lg shadow-xl transform hover:scale-105 
                           transition-transform mt-8">
@@ -96,34 +96,33 @@ export default function Home() {
               <section className="py-20 px-4 bg-white">
                 <div className="max-w-6xl mx-auto">
                   <h2 className="text-3xl font-bold text-center text-slate-800 mb-16">
-                    How Hill Cipher Works
+                  Cách thức hoạt động của Hill Cipher
                   </h2>
                   <div className="grid md:grid-cols-3 gap-8">
                     <div className="p-6 rounded-lg bg-gradient-to-br from-slate-50 to-white 
                       shadow-lg hover:shadow-xl transition-shadow">
                       <RiKeyLine className="w-12 h-12 text-indigo-600 mb-4" />
-                      <h3 className="text-xl font-semibold text-slate-800 mb-3">Key Matrix</h3>
+                      <h3 className="text-xl font-semibold text-slate-800 mb-3">Ma trận chính</h3>
                       <p className="text-slate-600">
-                        Create a square matrix as your encryption key. This matrix will be 
-                        used to transform your message.
+                      Tạo một ma trận vuông làm khóa mã hóa của bạn. Ma trận này sẽ được
+                      sử dụng để chuyển đổi tin nhắn của bạn.
                       </p>
                     </div>
                     <div className="p-6 rounded-lg bg-gradient-to-br from-slate-50 to-white 
                       shadow-lg hover:shadow-xl transition-shadow">
                       <RiCodeSSlashLine className="w-12 h-12 text-purple-600 mb-4" />
-                      <h3 className="text-xl font-semibold text-slate-800 mb-3">Message Conversion</h3>
+                      <h3 className="text-xl font-semibold text-slate-800 mb-3">Chuyển đổi tin nhắn</h3>
                       <p className="text-slate-600">
-                        Convert your message into numerical values and arrange them in matrices 
-                        of appropriate size.
+                      Chuyển đổi tin nhắn của bạn thành các giá trị số và sắp xếp chúng theo ma trận
+                      có kích thước phù hợp.
                       </p>
                     </div>
                     <div className="p-6 rounded-lg bg-gradient-to-br from-slate-50 to-white 
                       shadow-lg hover:shadow-xl transition-shadow">
                       <RiFunctionLine className="w-12 h-12 text-indigo-600 mb-4" />
-                      <h3 className="text-xl font-semibold text-slate-800 mb-3">Matrix Multiplication</h3>
+                      <h3 className="text-xl font-semibold text-slate-800 mb-3">Phép nhân ma trận</h3>
                       <p className="text-slate-600">
-                        Multiply your message matrix with the key matrix to produce the 
-                        encrypted message.
+                      Nhân ma trận tin nhắn của bạn với ma trận khóa để tạo ra tin nhắn được mã hóa.
                       </p>
                     </div>
                   </div>
