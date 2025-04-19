@@ -1,10 +1,39 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { getUid, getToken } from "../utils/auth.js";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
     const timeoutRef = useRef(null);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const token = getToken();
+        const uid = getUid();
+      
+        if (token && uid) {
+          const decoded = jwtDecode(token);
+          console.log(" Token:", decoded); // In ra toàn bộ payload của token
+          console.log(" Uid:", uid); // In ra toàn bộ payload của uid
+
+          if (decoded.email) {
+            setUser({ email: decoded.email, uid: uid });
+          } else {
+            console.error("Không tìm thấy email trong token", decoded);
+          }
+        } else {
+          console.error("Không tìm thấy token hoặc uid trong storage");
+        }
+      }, []);
+      
+    const handleLogout = () => {
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("uid");
+      setUser(null); // Clear user state
+      navigate("/");
+    };
 
     const handleLogin = () => navigate("/login");
     const handleSignUp = () => navigate("/signup");
@@ -56,28 +85,44 @@ const Header = () => {
                     </div>
                 )}
             </div>
-
+            
             {/* Title */}
             <div className="flex-1 text-center px-4">
                 <Link to="/" className="text-xl font-bold">
                     Tìm hiểu công nghệ Jamstack và xây dựng ứng dụng Web minh họa thuật toán mã hóa và giải mã Hill
                 </Link>
             </div>
-
-            {/* Login/Signup */}
-            <div className="flex items-center space-x-2">
-                <button
-                    onClick={handleLogin}
-                    className="bg-white text-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white"
-                >
-                    login
-                </button>
-                <button
-                    onClick={handleSignUp}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-blue-500"
-                >
-                    sign up
-                </button>
+            <div className="flex items-center space-x-2 min-w-0">
+                {user ? (
+                    <>
+                        <span className="text-black font-bold truncate">
+                        <Link to="/profile">
+                            <button className="bg-white text-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white">
+                                {user?.email ? user.email.split('@')[0] : "Đang tải..."}
+                            </button>
+                        </Link>
+                        </span>
+                        <button
+                            onClick={handleLogout}
+                            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                        >
+                            Logout
+                        </button>
+                    </>
+                ) : (
+                    <>
+                            <button 
+                                onClick={handleLogin}
+                                className="bg-white text-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white">
+                                Login
+                            </button>
+                            <button 
+                                onClick={handleSignUp}
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-blue-500">
+                                Sign Up
+                            </button>
+                    </>
+                )}
             </div>
         </header>
     );
