@@ -7,7 +7,7 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
     const timeoutRef = useRef(null);
-    const [user, setUser] = useState('');
+    const [user, setUser] = useState();
 
     useEffect(() => {
         const token = getToken();
