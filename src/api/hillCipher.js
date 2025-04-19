@@ -1,6 +1,6 @@
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-export async function encryptText(text, keyMatrixString) {
+export async function encryptText(text, keyMatrixString, userId ) {
     try {console.log("key: ",keyMatrixString);
         const keyMatrix = keyMatrixString;
         
@@ -10,11 +10,10 @@ export async function encryptText(text, keyMatrixString) {
         for (let i = 0; i < matrixSize; i++) {
             formattedKeyMatrix.push(keyMatrix.slice(i * matrixSize, (i + 1) * matrixSize));
         }
-
         const response = await fetch(`${API_BASE_URL}/api/hill/encrypt`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix }),
+            body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix, userId  }),
         });
 
         if (!response.ok) {
@@ -38,7 +37,7 @@ export async function encryptText(text, keyMatrixString) {
     }
 }
 
-export async function decryptText(text, keyMatrixString) {
+export async function decryptText(text, keyMatrixString, userId) {
     try {
         const keyMatrix = keyMatrixString.map(Number);
 
@@ -49,12 +48,10 @@ export async function decryptText(text, keyMatrixString) {
             formattedKeyMatrix.push(keyMatrix.slice(i * matrixSize, (i + 1) * matrixSize));
         }
 
-        console.log("Sending data to server:", { text, keyMatrix: formattedKeyMatrix });
-
         const response = await fetch(`${API_BASE_URL}/api/hill/decrypt`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix }),
+            body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix, userId }),
         });
 
         console.log("API response:", response);
