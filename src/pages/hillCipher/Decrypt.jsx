@@ -5,6 +5,7 @@ import { decryptText } from "../../api/hillCipher";
 import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
 import { getUid } from "../../utils/auth";
+import AlertBox from "../../utils/AlertBox";
 
 function parseKeyMatrix(keyMatrixArray) {
     const parsedMatrix = [];
@@ -53,8 +54,6 @@ const Decrypt = () => {
             const size = Math.ceil(Math.sqrt(parseInt(len, 10)));
             if (size >= 2) {
                 setMatrixSize(size); // Lưu kích thước ma trận
-    
-                // Khởi tạo ma trận khóa trống với đúng kích thước
                 const initialMatrix = Array(size * size).fill("");
                 setKeyMatrix(initialMatrix); // Khởi tạo ma trận khóa
                 setShowMatrix(true);
@@ -71,7 +70,6 @@ const Decrypt = () => {
             }
         }
     }, [location]);
-    
 
     const handleDecrypt = async () => {
         setErrorMessage("");
@@ -83,27 +81,25 @@ const Decrypt = () => {
             return;
         }
     
-        const originalLength = parseInt(new URLSearchParams(location.search).get("plaintext"), 10);  // Lấy độ dài văn bản gốc từ URL
-        
+        // const originalLength = parseInt(new URLSearchParams(location.search).get("plaintext") || "0", 10);
+        const originalLength = plainText.trim().length;
+
         try {
             const uid = getUid();
 
             const result = await decryptText(
                 plainText.trim(),
                 parseKeyMatrix(keyMatrix),
-                // originalLength,
                 uid
             );
 
-            if (result && result.decryptedText && Array.isArray(result.steps)) {
-                // Cắt văn bản giải mã theo độ dài văn bản gốc
-                const decryptedText = result.decryptedText.substring(0, originalLength); // Cắt đi phần thừa
+            if (result && typeof result.decryptedText === 'string' && result.decryptedText !== "" && Array.isArray(result.steps)) {
+                const decryptedText = result.decryptedText.substring(0, originalLength);
                 setCipherText(decryptedText);
                 setSteps(result.steps);
             } else {
                 setErrorMessage("Dữ liệu trả về không hợp lệ!");
             }
-    
         } catch (error) {
             console.error("Lỗi khi giải mã:", error);
             console.log("Full error object:", JSON.stringify(error, null, 2));
@@ -224,11 +220,7 @@ const Decrypt = () => {
                                 >
                                     Giải mã
                                 </button>
-                                {errorMessage && (
-                                    <div className="text-red-600 font-semibold bg-red-100 border border-red-400 px-4 py-2 rounded mt-2">
-                                        ⚠️ {errorMessage}
-                                    </div>
-                                )}
+                                {errorMessage && <AlertBox message={errorMessage} type="error" />}
                             </div>
                             <label className="block text-gray-700 mb-2">Văn bản giải mã</label>
                             <div className="flex items-center space-x-4">
