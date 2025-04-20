@@ -11,8 +11,8 @@ const HillCipher = () => {
            
             <div className="text-center px-4">
                 <p className="text-lg font-bold">Hill cipher</p>
-                <p className="text-base">is a polygraphic substitution cipher that uses linear algebra, specifically matrices, to encrypt and decrypt messages.</p>
-                <p className="text-base mt-2">Invented by <span className="font-bold">Lester S. Hill</span> in 1929, it transforms blocks of plaintext into ciphertext through matrix multiplication and modular arithmetic.</p>
+                <p className="text-base">Là một loại mật mã thay thế đa ký tự sử dụng đại số tuyến tính, cụ thể là ma trận, để mã hóa và giải mã tin nhắn.</p>
+                <p className="text-base mt-2">Được phát minh bởi <span className="font-bold">Lester S. Hill</span> vào năm 1929, nó chuyển đổi các khối văn bản thuần túy thành văn bản mã hóa thông qua phép nhân ma trận và số học mô-đun.</p>
             </div>
             <div className="mt-8">
                 <i className="fas fa-chevron-down text-2xl"></i>
