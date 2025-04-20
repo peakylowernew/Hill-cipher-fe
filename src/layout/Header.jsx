@@ -30,7 +30,7 @@ const Header = () => {
       
     const handleLogout = () => {
       localStorage.removeItem("token");
-      sessionStorage.removeItem("uid");
+      localStorage.removeItem("uid");
       setUser(null); // Clear user state
       navigate("/");
     };
@@ -85,7 +85,6 @@ const Header = () => {
                     </div>
                 )}
             </div>
-            
             {/* Title */}
             <div className="flex-1 text-center px-4">
                 <Link to="/" className="text-xl font-bold">
@@ -93,9 +92,22 @@ const Header = () => {
                 </Link>
             </div>
             <div className="flex items-center space-x-2 min-w-0">
-                {user ? (
+                {!user ? (
                     <>
-                        <span className="text-black font-bold truncate">
+                            <button 
+                                onClick={handleLogin}
+                                className="bg-white text-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white">
+                                Login
+                            </button>
+                            <button 
+                                onClick={handleSignUp}
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-blue-500">
+                                Sign Up
+                            </button>
+                    </>
+                ) : (
+                    <>
+                            <span className="text-black font-bold truncate">
                         <Link to="/profile">
                             <button className="bg-white text-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white">
                                 {user?.email ? user.email.split('@')[0] : "Đang tải..."}
