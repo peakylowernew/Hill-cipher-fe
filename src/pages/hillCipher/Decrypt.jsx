@@ -36,6 +36,7 @@ const Decrypt = () => {
     const [plainText, setPlainText] = useState(""); 
     const [cipherText, setCipherText] = useState("");
     const [keyMatrix, setKeyMatrix] = useState([]);
+    const [inverseMatrix, setInverseMatrix] = useState([]);
     const [matrixSize, setMatrixSize] = useState(0);
     const [steps, setSteps] = useState([]);
     const [showMatrix, setShowMatrix] = useState(false);
@@ -97,6 +98,13 @@ const Decrypt = () => {
                 const decryptedText = result.decryptedText.substring(0, originalLength);
                 setCipherText(decryptedText);
                 setSteps(result.steps);
+                 // Kiểm tra trước khi cập nhật inverseMatrix
+            if (Array.isArray(result.inverseMatrix) && result.inverseMatrix.length > 0) {
+                setInverseMatrix(result.inverseMatrix);
+                console.log("Khóa nghịch đảo:", result.inverseMatrix);
+            } else {
+                console.error("Khóa nghịch đảo không hợp lệ:", result.inverseMatrix);
+            }
             } else {
                 setErrorMessage("Dữ liệu trả về không hợp lệ!");
             }
@@ -203,7 +211,7 @@ const Decrypt = () => {
                                         {Array.from({ length: matrixSize * matrixSize }).map((_, index) => (
                                             <input
                                                 key={index}
-                                                type="text"
+                                                type="text"yy
                                                 className="p-2 border rounded w-full text-center"
                                                 value={keyMatrix[index]}
                                                 onChange={(e) => handleKeyMatrixChange(index, e.target.value)}
@@ -242,6 +250,32 @@ const Decrypt = () => {
                             {steps && steps.length > 0 ? (
                                 <div className="mt-4 p-4 bg-gray-200 rounded">
                                     <h3 className="font-semibold">📌</h3>
+                                    <div className="mb-4">
+                                    {Array.isArray(inverseMatrix) && inverseMatrix.length > 0 && (
+    <>
+        <p className="font-semibold mb-2">🔐 KHÓA NGHỊCH ĐẢO:</p>
+        <div className="inline-block">
+            {Array.from({ length: matrixSize }).map((_, rowIndex) => (
+                <div key={rowIndex} className="flex justify-center space-x-2 mb-2">
+                    {Array.from({ length: matrixSize }).map((_, colIndex) => {
+                        const value = inverseMatrix[rowIndex]?.[colIndex];
+
+                        return (
+                            <div
+                                key={colIndex}
+                                className="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-lg shadow-sm text-lg font-medium bg-white"
+                            >
+                                {value}
+                            </div>
+                        );
+                    })}
+                </div>
+            ))}
+        </div>
+    </>
+)}
+
+                                    </div>
                                     <ul className="list-disc list-inside text-sm space-y-2">
                                         {steps.map((step, index) => (
                                             <div
@@ -249,7 +283,6 @@ const Decrypt = () => {
                                                 className="opacity-0 animate-fadeInUp"
                                                 style={{ animationDelay: `${index * 0.3}s` }}
                                             >
-                                                <p dangerouslySetInnerHTML={{ __html: step.key }} />
                                                 {step.details && step.details.map((detail, i) => (
                                                     <p 
                                                         key={i} 

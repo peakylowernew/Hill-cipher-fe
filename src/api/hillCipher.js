@@ -62,7 +62,6 @@ export async function decryptText(text, keyMatrixString, userId) {
         
         const data = await response.json();
         console.log("API Response:", data);
-
         return data;
     } catch (error) {
         console.error("Lỗi khi giải mã:", error.message);
