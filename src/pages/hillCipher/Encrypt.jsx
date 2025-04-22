@@ -67,8 +67,6 @@ const Encrypt = () => {
                     } else {
                       console.error("Không tìm thấy token hoặc uid trong storage");
                     }
-                  
-            
                
             const response = await encryptText(
                 plainText.trim(),
@@ -227,29 +225,52 @@ const Encrypt = () => {
                             <label className="block text-gray-700 mb-2">Chi tiết bước mã hóa</label>
                             {steps && steps.length > 0 ? (
                                 <div className="mt-4 p-4 bg-gray-200 rounded">
-                                    <h3 className="font-semibold">📌</h3>
+                                    <div className="mb-4">
+                                    {Array.isArray(keyMatrix) && keyMatrix.length > 0 && (
+                                        <>
+                                        <p className="font-semibold mb-2">🔐 KHÓA:</p>
+                                        <div className="inline-block">
+                                            {Array.from({ length: matrixSize }).map((_, rowIndex) => (
+                                            <div key={rowIndex} className="flex justify-center space-x-2 mb-2">
+                                                {Array.from({ length: matrixSize }).map((_, colIndex) => {
+                                                const value = keyMatrix[rowIndex * matrixSize + colIndex];
+                                                return (
+                                                    <div
+                                                    key={colIndex}
+                                                    className="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-lg shadow-sm text-lg font-medium bg-white"
+                                                    >
+                                                    {value}
+                                                    </div>
+                                                );
+                                                })}
+                                            </div>
+                                            ))}
+                                        </div>
+                                        </>
+                                    )}
+                                    </div>
+
                                     <ul className="list-disc list-inside text-sm space-y-2">
                                     {steps.map((step, index) => (
                                         <div
-                                            key={index}
-                                            className="opacity-0 animate-fadeInUp"
-                                            style={{ animationDelay: `${index * 0.3}s` }}
+                                        key={index}
+                                        className="opacity-0 animate-fadeInUp"
+                                        style={{ animationDelay: `${index * 0.3}s` }}
                                         >
-                                            <p dangerouslySetInnerHTML={{ __html: step.key }} />
-                                            {step.details?.map((detail, i) => (
+                                        {step.details?.map((detail, i) => (
                                             <p
-                                                key={i}
-                                                className="ml-5 opacity-0 animate-fadeInUp"
-                                                style={{ animationDelay: `${(index + i + 1) * 0.3}s` }}
-                                                dangerouslySetInnerHTML={{ __html: detail }}
+                                            key={i}
+                                            className="ml-5 opacity-0 animate-fadeInUp"
+                                            style={{ animationDelay: `${(index + i + 1) * 0.3}s` }}
+                                            dangerouslySetInnerHTML={{ __html: detail }}
                                             />
-                                            ))}
-                                            <p>{step.step}</p>
+                                        ))}
+                                        <p>{step.step}</p>
                                         </div>
                                     ))}
                                     </ul>
                                 </div>
-                             ) : (
+                                ) : (
                                     <div>
                                         <DotLottieReact
                                             src="https://lottie.host/9da4ea67-0a55-43c3-a8a7-fb9937295561/Nqck7ppLJQ.lottie"

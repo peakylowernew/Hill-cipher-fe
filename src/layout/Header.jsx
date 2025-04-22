@@ -8,8 +8,6 @@ const Header = () => {
     const navigate = useNavigate();
     const timeoutRef = useRef(null);
     const [user, setUser] = useState();
-    const handleLogin = () => navigate("/login");
-    const handleSignUp = () => navigate("/signup");
 
     useEffect(() => {
         const token = getToken();
@@ -30,7 +28,6 @@ const Header = () => {
         }
       }, []);
       
-  
     const handleLogout = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("uid");
@@ -38,7 +35,8 @@ const Header = () => {
       navigate("/");
     };
 
-   
+    const handleLogin = () => navigate("/login");
+    const handleSignUp = () => navigate("/signup");
 
     const handleMouseEnter = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -80,13 +78,12 @@ const Header = () => {
                 {/* Menu dropdown */}
                 {isMenuOpen && (
                     <div className="absolute top-10 left-0 bg-gray-300 rounded-xl p-4 flex flex-col space-y-2 z-50 shadow-md min-w-[120px]">
-                    <Link to="/" className="text-black hover:underline">Home</Link>
+                        <Link to="/" className="text-black hover:underline">Home</Link>
                         <Link to="/hillcipher" className="text-black hover:underline">Tools</Link>
                         <Link to="/docs" className="text-black hover:underline">Docs</Link>
                         <Link to="/about" className="text-black hover:underline">About</Link>
                     </div>
                 )}
-           
             </div>
             {/* Title */}
             <div className="flex-1 text-center px-4">
@@ -110,8 +107,6 @@ const Header = () => {
                         >
                             Logout
                         </button>
-
-                            
                     </>
                 ) : (
                     <>
