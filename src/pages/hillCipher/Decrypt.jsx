@@ -6,6 +6,7 @@ import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
 import { getUid } from "../../utils/auth";
 import AlertBox from "../../utils/AlertBox";
+import { generateInvertibleMatrix } from "../../utils/matrixGenerator.js";
 
 function parseKeyMatrix(keyMatrixArray) {
     const parsedMatrix = [];
@@ -192,12 +193,26 @@ const Decrypt = () => {
                                         onChange={handleMatrixSizeChange}
                                     />
                                 </div>
-                                <div className="mb-2 mt-8">
+                                <div className="mb-2 mt-8 flex gap-2">
                                     <button
                                         className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
                                         onClick={handleOkClick}
                                     >
                                         OK
+                                    </button>
+                                    <button
+                                        className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+                                        onClick={() => {
+                                            if (matrixSize >= 2) {
+                                                const randomMatrix = generateInvertibleMatrix(matrixSize);
+                                                setKeyMatrix(randomMatrix.map(v => v));
+                                                setShowMatrix(true);
+                                            } else {
+                                                alert("Kích thước ma trận phải từ 2x2 trở lên!");
+                                            }
+                                        }}
+                                    >
+                                        Tạo ngẫu nhiên
                                     </button>
                                 </div>
                             </div>
@@ -252,28 +267,28 @@ const Decrypt = () => {
                                     <h3 className="font-semibold">📌</h3>
                                     <div className="mb-4">
                                     {Array.isArray(inverseMatrix) && inverseMatrix.length > 0 && (
-    <>
-        <p className="font-semibold mb-2">🔐 KHÓA NGHỊCH ĐẢO:</p>
-        <div className="inline-block">
-            {Array.from({ length: matrixSize }).map((_, rowIndex) => (
-                <div key={rowIndex} className="flex justify-center space-x-2 mb-2">
-                    {Array.from({ length: matrixSize }).map((_, colIndex) => {
-                        const value = inverseMatrix[rowIndex]?.[colIndex];
+                                        <>
+                                            <p className="font-semibold mb-2">🔐 KHÓA NGHỊCH ĐẢO:</p>
+                                            <div className="inline-block">
+                                                {Array.from({ length: matrixSize }).map((_, rowIndex) => (
+                                                    <div key={rowIndex} className="flex justify-center space-x-2 mb-2">
+                                                        {Array.from({ length: matrixSize }).map((_, colIndex) => {
+                                                            const value = inverseMatrix[rowIndex]?.[colIndex];
 
-                        return (
-                            <div
-                                key={colIndex}
-                                className="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-lg shadow-sm text-lg font-medium bg-white"
-                            >
-                                {value}
-                            </div>
-                        );
-                    })}
-                </div>
-            ))}
-        </div>
-    </>
-)}
+                                                            return (
+                                                                <div
+                                                                    key={colIndex}
+                                                                    className="w-12 h-12 flex items-center justify-center border border-gray-300 rounded-lg shadow-sm text-lg font-medium bg-white"
+                                                                >
+                                                                    {value}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
 
                                     </div>
                                     <ul className="list-disc list-inside text-sm space-y-2">
