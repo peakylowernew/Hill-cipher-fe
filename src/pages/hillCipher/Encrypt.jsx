@@ -6,6 +6,7 @@ import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
 import { jwtDecode } from "jwt-decode"; // ma hoa token
 import { getUid, getToken } from "../../utils/auth.js";
+import { generateInvertibleMatrix } from "../../utils/matrixGenerator.js";
 
 function parseKeyMatrix(keyMatrixArray) {
     const parsedMatrix = [];
@@ -167,14 +168,28 @@ const Encrypt = () => {
                                         onChange={handleMatrixSizeChange}
                                     />
                                 </div>
-                                <div className="mb-2 mt-8">
-                                <button
-                                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-                                    onClick={handleOkClick}
-                                >
-                                    OK
-                                </button>
-                            </div>
+                                <div className="mb-2 mt-8 flex gap-2">
+                                    <button
+                                        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                                        onClick={handleOkClick}
+                                    >
+                                        OK
+                                    </button>
+                                    <button
+                                        className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+                                        onClick={() => {
+                                            if (matrixSize >= 2) {
+                                                const randomMatrix = generateInvertibleMatrix(matrixSize);
+                                                setKeyMatrix(randomMatrix.map(v => v));
+                                                setShowMatrix(true);
+                                            } else {
+                                                alert("Kích thước ma trận phải từ 2x2 trở lên!");
+                                            }
+                                        }}
+                                    >
+                                        Tạo ngẫu nhiên
+                                    </button>
+                                </div>
                             </div>
 
                             {showMatrix && matrixSize >= 2 && (
