@@ -31,13 +31,14 @@ export async function encryptText(text, keyMatrixString, userId ) {
         return {
             encryptedText: data.encryptedText,
             processSteps: processSteps,
+            originalText: data.originalText,
         };
     } catch (error) {
-        return { encryptedText: '', processSteps: [] };
+        return { encryptedText: '', processSteps: [], originalText: '' };
     }
 }
 
-export async function decryptText(text, keyMatrixString, userId) {
+export async function decryptText(text, keyMatrixString, userId, originalText) {
     try {
         const keyMatrix = keyMatrixString.map(Number);
 
@@ -51,7 +52,7 @@ export async function decryptText(text, keyMatrixString, userId) {
         const response = await fetch(`${API_BASE_URL}/api/hill/decrypt`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix, userId }),
+            body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix, userId, originalText }),
         });
 
         console.log("API response:", response);

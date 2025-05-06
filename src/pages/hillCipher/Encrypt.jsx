@@ -74,7 +74,7 @@ const Encrypt = () => {
                 parseKeyMatrix(keyMatrix),
                 uid
             );
-    
+            
             if (response && response.encryptedText && Array.isArray(response.processSteps)) {
                 setCipherText(response.encryptedText);
                 setSteps(response.processSteps);
@@ -134,7 +134,7 @@ const Encrypt = () => {
 
     const handleDecryptionRedirect = (e) => {
         e.preventDefault();
-        navigate(`/decrypt?text=${encodeURIComponent(cipherText)}&plaintext=${plainText.length}&len=${keyMatrix.length}&keyMatrix=${encodeURIComponent(JSON.stringify(keyMatrix))}`);
+        navigate(`/decrypt?text=${encodeURIComponent(cipherText)}&plaintext=${plainText.length}&originaltext=${plainText}&len=${keyMatrix.length}&keyMatrix=${encodeURIComponent(JSON.stringify(keyMatrix))}`);
     };
 
     return (

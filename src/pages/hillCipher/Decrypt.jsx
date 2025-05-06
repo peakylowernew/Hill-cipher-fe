@@ -34,6 +34,7 @@ function parseKeyMatrix(keyMatrixArray) {
 
 const Decrypt = () => {
     const location = useLocation();
+    const [originalText, setOriginalText ]=useState("");
     const [plainText, setPlainText] = useState(""); 
     const [cipherText, setCipherText] = useState("");
     const [keyMatrix, setKeyMatrix] = useState([]);
@@ -49,6 +50,12 @@ const Decrypt = () => {
         const text = params.get("text");// van ban da ma hoas
         const len = params.get("len"); 
         const keyMatrixStr = params.get("keyMatrix"); // Lấy ma trận khóa từ URL
+        const originalText = params.get("originaltext");
+
+        if (originalText) {
+            setOriginalText(decodeURIComponent(originalText));  // Lưu giá trị originalText
+        }
+
         if (text && len) {
             setPlainText(decodeURIComponent(text)); // Giải mã văn bản
     
@@ -61,7 +68,7 @@ const Decrypt = () => {
                 setShowMatrix(true);
             }
         }
-    
+
         if (keyMatrixStr) {
             try {
                 // Giải mã và chuyển ma trận khóa từ chuỗi JSON trong URL
@@ -85,14 +92,16 @@ const Decrypt = () => {
     
         // const originalLength = parseInt(new URLSearchParams(location.search).get("plaintext") || "0", 10);
         const originalLength = plainText.trim().length;
-
+        console.log("originalText:", originalText);
+        
         try {
             const uid = getUid();
 
             const result = await decryptText(
                 plainText.trim(),
                 parseKeyMatrix(keyMatrix),
-                uid
+                uid,
+                originalText
             );
 
             if (result && typeof result.decryptedText === 'string' && result.decryptedText !== "" && Array.isArray(result.steps)) {
