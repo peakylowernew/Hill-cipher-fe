@@ -2,6 +2,7 @@ import { useState } from "react";
 import { login } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"; // dùng để giải mã token để lấy UIDUID
+import { GoogleLogin } from '@react-oauth/google';// login bằng google
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -38,6 +39,32 @@ const Login = () => {
       setError("Đăng nhập thất bại. Vui lòng kiểm tra lại.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const { credential } = credentialResponse;
+
+      if (!credential) throw new Error("Không nhận được credential từ Google");
+
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken: credential }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('token', data.token); // token backend trả về
+        localStorage.setItem('uid', data.uid); // nếu backend có trả uid
+        navigate("/profile");
+      } else {
+        console.error(data);
+      }
+    } catch (err) {
+      console.error("Lỗi đăng nhập Google:", err);
     }
   };
 
@@ -107,15 +134,10 @@ const Login = () => {
           </button>
 
           <div className="mt-4 text-center opacity-50 transition-opacity duration-300 space-y-2">
-            <button className="w-full p-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 transition duration-300">
-              Đăng nhập bằng Google
-            </button>
-            <button className="w-full p-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 transition duration-300">
-              Đăng nhập bằng Facebook
-            </button>
-            <button className="w-full p-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 transition duration-300">
-              Đăng nhập bằng GitHub
-            </button>
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={() => console.error("Đăng nhập Google thất bại")}
+            />
           </div>
         </form>
       </div>
