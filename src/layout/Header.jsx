@@ -87,8 +87,12 @@ const Header = () => {
             </div>
             {/* Title */}
             <div className="flex-1 text-center px-4">
-                <Link to="/" className="text-xl font-bold">
+                <Link to="/" className="text-xl font-bold hidden md:block">
                     Tìm hiểu công nghệ Jamstack và xây dựng ứng dụng Web minh họa thuật toán mã hóa và giải mã Hill
+                </Link>
+
+                <Link to="/" className="text-xl font-bold md:hidden">
+                    Thuật toán mã hóa và giải mã Hill
                 </Link>
             </div>
             <div className="flex items-center space-x-2 min-w-0">

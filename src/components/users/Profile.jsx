@@ -58,15 +58,15 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white font-sans pt-16">
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-300 text-black font-sans pt-24">
       <Header />
       <main className="max-w-5xl mx-auto p-6 space-y-10">
         {/* Thông tin người dùng */}
-        <section className="flex items-center gap-6 bg-gray-800/50 p-6 rounded-xl shadow-lg">
+        <section className="flex items-center gap-6 bg-white p-6 rounded-xl shadow-lg">
           <img
             src={user?.avatar || "/image/avata2.jpg"}
             alt="User avatar"
-            className="rounded-full w-28 h-28 object-cover border-4 border-purple-500"
+            className="rounded-full w-28 h-28 object-cover border-4 border-purple-900"
           />
           <div className="flex-1">
             <h1 className="text-3xl font-bold tracking-tight">
@@ -80,26 +80,26 @@ const Profile = () => {
         </section>
 
         {/* Thông tin cá nhân */}
-        <section className="bg-gray-800/50 p-6 rounded-xl shadow-lg">
+        <section className="bg-white p-6 rounded-xl shadow-lg">
           <h2 className="text-xl font-semibold mb-4">Thông tin cá nhân</h2>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <FaBook className="text-gray-400" />
-              <p className="text-blue-400">Email: {user?.email || "Đang tải..."}</p>
+              <p className="text-black">Email: {user?.email || "Đang tải..."}</p>
             </div>
             <div className="flex items-center gap-3">
               <FaPhone className="text-gray-400" />
-              <p className="text-blue-400">Phone: {user?.phone || "Chưa cập nhật"}</p>
+              <p className="text-black">Phone: {user?.phone || "Chưa cập nhật"}</p>
             </div>
           </div>
         </section>
 
         {/* Lịch sử sử dụng công cụ */}
-        <section className="bg-gray-800/50 p-6 rounded-xl shadow-lg">
+        <section className="bg-white p-6 rounded-xl shadow-lg">
           <h2 className="text-xl font-semibold mb-4">Tool usage history</h2>
           <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700">
             <table className="w-full text-sm text-left">
-              <thead className="sticky top-0 bg-gray-800/80 text-gray-300">
+              <thead className="sticky top-0 bg-gray-800/0 text-black">
                 <tr className="border-b border-gray-600">
                   <th className="p-3">Tools</th>
                   <th className="p-3">Day</th>
@@ -109,7 +109,7 @@ const Profile = () => {
               <tbody>
                 {historyData?.length > 0 ? (
                   historyData.map((item) => (
-                    <tr key={item.id || item.timestamp} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
+                    <tr key={item.id || item.timestamp} className="border-b border-gray-200 hover:bg-gray-100 transition-colors">
                        <td className="p-3 capitalize">{item.action}</td>
                        <td className="p-3">
                           {item.timestamp? new Date(item.timestamp._seconds * 1000).toLocaleString() : "N/A"}
@@ -117,7 +117,7 @@ const Profile = () => {
                       <td className="p-3 text-right">
                         <button
                           onClick={() => openModal(item)}
-                          className="text-blue-400 underline hover:text-blue-300 transition-colors"
+                          className="text-blue-500 underline hover:text-blue-300 transition-colors"
                         >
                           Xem chi tiết
                         </button>
@@ -137,7 +137,7 @@ const Profile = () => {
                 {/* Modal hiển thị chi tiết lịch sử */}
         {isModalOpen && (
           <div className="fixed inset-0 bg-gray-800/50 z-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-xl max-w-lg text-gray-800">
+            <div className="bg-white p-6 rounded-xl w-[90vw] max-w-3xl max-h-[80vh] overflow-y-auto text-gray-800">
               <h3 className="text-xl font-bold mb-4">{selectedTool?.tool}</h3>
               <p><strong>Hành động:</strong> {selectedTool?.action}</p>
               <p><strong>Input:</strong> {selectedTool?.input}</p>

@@ -138,9 +138,9 @@ const Encrypt = () => {
     };
 
     return (
-        <div>
+        <div className="flex flex-col min-h-screen">
             <Header />
-            <div className="bg-gray-300 pt-15 flex items-center justify-center min-h-screen">
+            <div className="bg-gray-300 pt-24 flex items-center justify-center">
                 <div className="bg-white p-9 w-full">
                     <div className="text-center mb-6">
                         <button className="bg-blue-500 text-white py-2 px-4 rounded">MÃ HÓA HILL</button>
