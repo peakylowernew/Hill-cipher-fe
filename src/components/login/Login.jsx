@@ -133,7 +133,7 @@ const Login = () => {
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
 
-          <div className="mt-4 text-center opacity-50 transition-opacity duration-300 space-y-2">
+          <div className="mt-4 text-center transition-opacity duration-300 space-y-2">
             <GoogleLogin
               onSuccess={handleGoogleLoginSuccess}
               onError={() => console.error("Đăng nhập Google thất bại")}
