@@ -8,10 +8,11 @@ import Docs from "./pages/Docs";
 import About from "./pages/About";
 import Encrypt from "./pages/hillCipher/Encrypt";
 import Decrypt from "./pages/hillCipher/Decrypt";
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 function App() {
   return (
+    <GoogleOAuthProvider clientId="875876081798-d206m0t51varq32rd09k41nrr5nfegp2.apps.googleusercontent.com">
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -23,9 +24,9 @@ function App() {
         <Route path="/decrypt" element={<Decrypt />} />
         <Route path="/docs" element={<Docs />} />
         <Route path="/about" element={<About />} />
-
       </Routes>
     </Router>
+    </GoogleOAuthProvider>
   );
 }
 
