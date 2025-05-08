@@ -4,35 +4,40 @@ import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 
 const HillCipher = () => {
-    return (
-        <div>
-             <Header />
-        <div className="bg-gray-300 flex flex-col items-center justify-center min-h-screen">
-           
-            <div className="text-center px-4">
-                <p className="text-lg font-bold">Hill cipher</p>
-                <p className="text-base">Là một loại mật mã thay thế đa ký tự sử dụng đại số tuyến tính, cụ thể là ma trận, để mã hóa và giải mã tin nhắn.</p>
-                <p className="text-base mt-2">Được phát minh bởi <span className="font-bold">Lester S. Hill</span> vào năm 1929, nó chuyển đổi các khối văn bản thuần túy thành văn bản mã hóa thông qua phép nhân ma trận và số học mô-đun.</p>
-            </div>
-            <div className="mt-8">
-                <i className="fas fa-chevron-down text-2xl"></i>
-            </div>
-            <div className="mt-4 flex flex-col items-center space-y-2">
-                <Link to='/encrypt'>
-                    <button className="bg-gray-500 text-white py-2 px-16 rounded transition duration-300 hover:bg-gray-700">
-                        Mã hóa
-                    </button>
-                </Link>
-                <Link to='/decrypt'>
-                    <button className="bg-white text-black py-2 px-4 rounded ">
-                        Giải mã
-                    </button>
-                </Link>
-            </div>
+  return (
+    <div className="bg-gradient-to-tr from-purple-100 via-white to-blue-100 min-h-screen flex flex-col">
+      <Header />
+      
+      <div className="flex-grow flex items-center justify-center px-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-10 max-w-2xl w-full text-center animate-fade-in">
+          <h1 className="text-4xl font-bold text-purple-700 mb-4 animate-slide-down">
+            🔐 Hill Cipher
+          </h1>
+          <p className="text-gray-700 text-lg leading-relaxed animate-fade-in delay-100">
+            Hill Cipher là phương pháp mã hóa sử dụng <strong>ma trận và số học modulo</strong> để biến đổi văn bản thuần túy thành mã hóa.
+          </p>
+          <p className="mt-2 text-gray-600 animate-fade-in delay-200">
+            Phát minh bởi <span className="font-semibold text-purple-600">Lester S. Hill</span> năm 1929, kỹ thuật này là nền tảng trong mật mã học hiện đại.
+          </p>
+
+          <div className="mt-8 flex justify-center gap-6 animate-fade-in delay-300">
+            <Link to="/encrypt">
+              <button className="bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-700 transform hover:scale-105 transition duration-300">
+                🔒 Mã hóa
+              </button>
+            </Link>
+            <Link to="/decrypt">
+              <button className="bg-white border-2 border-purple-500 text-purple-700 px-6 py-3 rounded-full shadow hover:bg-purple-50 transform hover:scale-105 transition duration-300">
+                🔓 Giải mã
+              </button>
+            </Link>
+          </div>
         </div>
-        <Footer />
-        </div>
-    );
+      </div>
+
+      <Footer />
+    </div>
+  );
 };
 
 export default HillCipher;
