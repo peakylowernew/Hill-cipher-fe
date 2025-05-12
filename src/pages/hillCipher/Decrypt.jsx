@@ -108,7 +108,7 @@ const Decrypt = () => {
                 const decryptedText = result.decryptedText.substring(0, originalLength);
                 setCipherText(decryptedText);
                 setSteps(result.steps);
-                 // Kiểm tra trước khi cập nhật inverseMatrix
+                // Kiểm tra trước khi cập nhật inverseMatrix
             if (Array.isArray(result.inverseMatrix) && result.inverseMatrix.length > 0) {
                 setInverseMatrix(result.inverseMatrix);
                 console.log("Khóa nghịch đảo:", result.inverseMatrix);
@@ -132,8 +132,10 @@ const Decrypt = () => {
 
     const handleMatrixSizeChange = (e) => {
         const size = parseInt(e.target.value);
-        setMatrixSize(size);
-        setShowMatrix(false);
+        if (!isNaN(size) && size >= 2) {
+            setMatrixSize(size);
+            setShowMatrix(false);
+        }
     };
 
     const handleOkClick = () => {
@@ -196,6 +198,7 @@ const Decrypt = () => {
                                     <label className="block text-gray-700 mb-2">Kích thước ma trận khóa giải mã</label>
                                     <input
                                         type="number"
+                                        min={2}
                                         placeholder="Nhập kích thước ma trận vuông (n ≥ 2)"
                                         className="w-full p-2 border rounded"
                                         value={matrixSize}

@@ -79,21 +79,26 @@ const Encrypt = () => {
                 setCipherText(response.encryptedText);
                 setSteps(response.processSteps);
             } else {
-                throw new Error("Dữ liệu trả về không hợp lệ!");
+                // throw new Error("Dữ liệu trả về không hợp lệ!");
+                const message = response?.message;
+                alert(message);
             }
         } catch (error) {
             console.error("Lỗi khi mã hóa:", error);
             setCipherText("");
             setSteps([]);
-            alert("Có lỗi trong quá trình mã hóa!");
+             const message = error?.response?.data?.message || error?.message || "Có lỗi trong quá trình mã hóa!";
+            alert(message);
         }
     };
     
 
     const handleMatrixSizeChange = (e) => {
         const size = parseInt(e.target.value);
-        setMatrixSize(size);
-        setShowMatrix(false);
+        if (!isNaN(size) && size >= 2) {
+            setMatrixSize(size);
+            setShowMatrix(false);
+        }
     };
 
     const handleOkClick = () => {
@@ -162,6 +167,7 @@ const Encrypt = () => {
                                     <label className="block text-gray-700 mb-2">Kích thướt ma trận khóa mã hóa</label>
                                     <input
                                         type="number"
+                                        min={2}
                                         placeholder="Nhập kích thước ma trận vuông (n ≥ 2)"
                                         className="w-full p-2 border rounded"
                                         value={matrixSize}

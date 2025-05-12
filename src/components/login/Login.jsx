@@ -30,6 +30,8 @@ const Login = () => {
         
         localStorage.setItem("token", token);
         localStorage.setItem("uid", uid);
+        const user = { token, uid };
+            localStorage.setItem("user", JSON.stringify(user));
         navigate("/profile");
       } else {
         throw new Error("Không có dữ liệu từ server");
