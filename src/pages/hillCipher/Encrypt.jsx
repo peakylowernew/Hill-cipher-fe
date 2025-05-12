@@ -79,7 +79,6 @@ const Encrypt = () => {
                 setCipherText(response.encryptedText);
                 setSteps(response.processSteps);
             } else {
-                // throw new Error("Dữ liệu trả về không hợp lệ!");
                 const message = response?.message;
                 alert(message);
             }
@@ -87,7 +86,7 @@ const Encrypt = () => {
             console.error("Lỗi khi mã hóa:", error);
             setCipherText("");
             setSteps([]);
-             const message = error?.response?.data?.message || error?.message || "Có lỗi trong quá trình mã hóa!";
+            const message = error?.response?.data?.message || error?.message || "Có lỗi trong quá trình mã hóa!";
             alert(message);
         }
     };
