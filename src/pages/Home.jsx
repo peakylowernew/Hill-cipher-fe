@@ -10,24 +10,25 @@ export default function Home() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Kiểm tra xem localStorage có dữ liệu không trước khi parse
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
             try {
-                setUser(JSON.parse(storedUser));
+                const parsedUser = JSON.parse(storedUser);
+                console.log("Stored User:", parsedUser);  // Xem dữ liệu user lưu trong localStorage
+                setUser(parsedUser);  // Lưu thông tin user nếu parse thành công
             } catch (error) {
                 console.error("Lỗi parse JSON:", error);
-                localStorage.removeItem("user"); // Xóa dữ liệu lỗi
+                localStorage.removeItem("user");  // Xóa dữ liệu lỗi
             }
         }
     }, []);
 
     const handleTryItNow = () => {
         if (user) {
-            // Nếu người dùng đã đăng nhập, chuyển tới trang mã hóa/giải mã
-            navigate("/hillcipher");
+            
+                navigate("/hillcipher");
         } else {
-            // Nếu người dùng chưa đăng nhập, chuyển tới trang đăng nhập
+            console.log("User data is null or undefined");  // Log khi user null
             navigate("/login");
         }
     };
