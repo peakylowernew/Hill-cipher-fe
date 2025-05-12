@@ -25,11 +25,10 @@ export default function Home() {
 
     const handleTryItNow = () => {
         if (user) {
-            
-                navigate("/hillcipher");
+          navigate("/hillcipher");
         } else {
-            console.log("User data is null or undefined");  // Log khi user null
-            navigate("/login");
+          console.log("User data is null or undefined");  // Log khi user null
+          navigate("/login");
         }
     };
 

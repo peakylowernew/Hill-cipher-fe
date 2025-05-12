@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { decryptText } from "../../api/hillCipher";
@@ -6,10 +6,12 @@ import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
 import { getUid } from "../../utils/auth";
 import AlertBox from "../../utils/AlertBox";
+import { useNavigate } from "react-router-dom";
 import { generateInvertibleMatrix } from "../../utils/matrixGenerator.js";
 
 function parseKeyMatrix(keyMatrixArray) {
     const parsedMatrix = [];
+
 
     for (let i = 0; i < keyMatrixArray.length; i++) {
         const item = keyMatrixArray[i];
@@ -44,6 +46,8 @@ const Decrypt = () => {
     const [showMatrix, setShowMatrix] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const userId = getUid();
+    const navigate = useNavigate();
+    const hasClearedUrlRef = useRef(false);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -79,6 +83,16 @@ const Decrypt = () => {
             }
         }
     }, [location]);
+
+    const clearUrlOnce = () => {
+        if (!hasClearedUrlRef.current) {
+            navigate("/decrypt", { replace: true });
+            hasClearedUrlRef.current = true;
+
+            setPlainText("");
+            setOriginalText("");
+        }
+    };  
 
     const handleDecrypt = async () => {
         setErrorMessage("");
@@ -148,6 +162,7 @@ const Decrypt = () => {
     };
 
     const handleKeyMatrixChange = (index, value) => {
+        clearUrlOnce();
         const newKeyMatrix = [...keyMatrix];
 
         if (value === "") {
@@ -190,7 +205,10 @@ const Decrypt = () => {
                                     placeholder="Nhập văn bản mã hóa"
                                     className="w-full p-2 border rounded"
                                     value={plainText}
-                                    onChange={(e) => setPlainText(e.target.value)}
+                                    onChange={(e) => {
+                                        clearUrlOnce();
+                                        setPlainText(e.target.value);
+                                    }}
                                 />
                             </div>
                             <div className="mb-4 flex items-center space-x-4">
