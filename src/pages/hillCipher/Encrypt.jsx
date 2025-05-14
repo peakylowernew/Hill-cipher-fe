@@ -46,7 +46,7 @@ const Encrypt = () => {
         e.preventDefault();
     
 
-        if (!plainText.trim() || keyMatrix.some(val => val === "" || !userId)) {
+        if (!plainText.trim() || keyMatrix.some(val => val === "")) {
             alert("Vui lòng nhập đầy đủ dữ liệu!");
             return;
         }
