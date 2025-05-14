@@ -9,7 +9,9 @@ const Profile = () => {
   const [historyData,setHistoryData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTool, setSelectedTool] = useState(null);
-
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({ name: "", avatar: "" });
+  
   useEffect(() => {
     const fetchUserData = async () => {
       const uid = getUid();
@@ -57,6 +59,15 @@ const Profile = () => {
     setIsModalOpen(true);
   };
 
+  const uploadImageToImgbb = async (file) => {
+    const apiKey = "bd430a161dc0d708ac12f4601a091d56"; 
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await axios.post(`https://api.imgbb.com/1/upload?key=${apiKey}`, formData);
+    return res.data.data.url;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-gray-300 text-black font-sans pt-24">
       <Header />
@@ -64,17 +75,23 @@ const Profile = () => {
         {/* Thông tin người dùng */}
         <section className="flex items-center gap-6 bg-white p-6 rounded-xl shadow-lg">
           <img
-            src={user?.avatar || "/image/avata2.jpg"}
+            src={user?.avatar || "/image/avata.png"}
             alt="User avatar"
             className="rounded-full w-28 h-28 object-cover border-4 border-purple-900"
           />
           <div className="flex-1">
             <h1 className="text-3xl font-bold tracking-tight">
-              {/* {user?.name || "Đang tải..."} */}
-              {user?.email ? user.email.split('@')[0] : "Đang tải..."}
-              </h1>
-            <button className="mt-3 px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 rounded-lg text-white font-medium hover:from-red-600 hover:to-red-700 transition-all duration-300">
-              Edit Profile
+              {user?.name?.trim() || (user?.email ? user.email.split('@')[0] : "Đang tải...")}
+            </h1>
+
+            <button
+                className="mt-3 px-5 py-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg text-white font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
+                onClick={() => {
+                  setFormData({ name: user?.name || "", avatar: user?.avatar || "" });
+                  setIsEditing(true);
+                }}
+              >
+                Edit Profile
             </button>
           </div>
         </section>
@@ -99,7 +116,7 @@ const Profile = () => {
           <h2 className="text-xl font-semibold mb-4">Tool usage history</h2>
           <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700">
             <table className="w-full text-sm text-left">
-              <thead className="sticky top-0 bg-gray-800/0 text-black">
+              <thead className="sticky top-0 bg-gray-200 text-black">
                 <tr className="border-b border-gray-600">
                   <th className="p-3">Tools</th>
                   <th className="p-3">Day</th>
@@ -134,9 +151,9 @@ const Profile = () => {
           </div>
         </section>
 
-                {/* Modal hiển thị chi tiết lịch sử */}
+        {/* Modal hiển thị chi tiết lịch sử */}
         {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-800/50 z-50 flex justify-center items-center">
+          <div className="fixed inset-0 bg-gray-800/20  flex justify-center items-center">
             <div className="bg-white p-6 rounded-xl w-[90vw] max-w-3xl max-h-[80vh] overflow-y-auto text-gray-800">
               <h3 className="text-xl font-bold mb-4">{selectedTool?.tool}</h3>
               <p><strong>Hành động:</strong> {selectedTool?.action}</p>
@@ -206,6 +223,72 @@ const Profile = () => {
           </div>
         )}
 
+        {isEditing && (
+          <div className="fixed inset-0 bg-gray-800/50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-xl w-[90vw] max-w-md text-gray-800 shadow-lg">
+              <h2 className="text-xl font-bold mb-4">Chỉnh sửa thông tin</h2>
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  placeholder="Tên hiển thị"
+                  className="border p-2 rounded w-full"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="border p-2 rounded w-full"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      try {
+                        const imageUrl = await uploadImageToImgbb(file);
+                        setFormData((prev) => ({ ...prev, avatar: imageUrl }));
+                        alert("Tải ảnh thành công!");
+                      } catch (error) {
+                        console.error("Upload lỗi:", error);
+                        alert("Tải ảnh thất bại.");
+                      }
+                    }
+                  }}
+                />
+                {formData.avatar && (
+                  <img
+                    src={formData.avatar}
+                    alt="Xem trước avatar"
+                    className="w-24 h-24 mt-2 rounded-full object-cover border"
+                />
+                )}
+              </div>
+              <div className="flex gap-3 mt-5 justify-end">
+                <button
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                  onClick={async () => {
+                    try {
+                      const uid = getUid();
+                      await axios.put(`${process.env.REACT_APP_API_URL}/api/auth/user/${uid}`, formData);
+                      alert("Cập nhật thành công.");
+                      setUser((prev) => ({ ...prev, ...formData }));
+                      setIsEditing(false);
+                    } catch (err) {
+                      console.error(err);
+                      alert("Lỗi khi cập nhật.");
+                    }
+                  }}
+                >
+                  Lưu thay đổi
+                </button>
+                <button
+                  className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                  onClick={() => setIsEditing(false)}
+                >
+                  Hủy
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
