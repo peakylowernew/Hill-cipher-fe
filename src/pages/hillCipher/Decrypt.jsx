@@ -44,11 +44,10 @@ const Decrypt = () => {
     const [matrixSize, setMatrixSize] = useState(0);
     const [steps, setSteps] = useState([]);
     const [showMatrix, setShowMatrix] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-    const userId = getUid();
     const navigate = useNavigate();
     const hasClearedUrlRef = useRef(false);
-
+    const [error, setError] = useState(null);
+    
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const text = params.get("text");// van ban da ma hoas
@@ -95,12 +94,13 @@ const Decrypt = () => {
     };  
 
     const handleDecrypt = async () => {
-        setErrorMessage("");
+        setError("");
         setCipherText("");
         setSteps([]);
+        
     
         if (!plainText.trim() || keyMatrix.some(val => val === "")) {
-            alert("Vui lòng nhập đầy đủ dữ liệu!");
+            setError("Vui lòng nhập đầy đủ dữ liệu!");
             return;
         }
     
@@ -118,6 +118,11 @@ const Decrypt = () => {
                 originalText
             );
 
+            if (result.error) {
+                setError(result.error);
+                return;
+            }
+
             if (result && typeof result.decryptedText === 'string' && result.decryptedText !== "" && Array.isArray(result.steps)) {
                 const decryptedText = result.decryptedText.substring(0, originalLength);
                 setCipherText(decryptedText);
@@ -130,7 +135,7 @@ const Decrypt = () => {
                 console.error("Khóa nghịch đảo không hợp lệ:", result.inverseMatrix);
             }
             } else {
-                setErrorMessage("Dữ liệu trả về không hợp lệ!");
+                setError("Dữ liệu trả về không hợp lệ!");
             }
         } catch (error) {
             console.error("Lỗi khi giải mã:", error);
@@ -140,7 +145,7 @@ const Decrypt = () => {
                 error?.response?.data?.error || 
                 error?.message || 
                 "Đã xảy ra lỗi không xác định!"; 
-            setErrorMessage(message); 
+            setError(message); 
         }
     };
 
@@ -157,7 +162,7 @@ const Decrypt = () => {
             setKeyMatrix(Array(matrixSize * matrixSize).fill(""));
             setShowMatrix(true);
         } else {
-            alert("Kích thước ma trận phải từ 2x2 trở lên!");
+            setError("Kích thước ma trận phải từ 2x2 trở lên!");
         }
     };
 
@@ -178,11 +183,11 @@ const Decrypt = () => {
             if (number >= 0 && number <= 25) {
                 newKeyMatrix[index] = number;
             } else {
-                alert("Số phải trong khoảng từ 0 đến 25");
+                setError("Số phải trong khoảng từ 0 đến 25");
                 return;
             }
         } else {
-            alert("Vui lòng nhập chữ cái (A-Z) hoặc số trong khoảng từ 0 đến 25");
+            setError("Vui lòng nhập chữ cái (A-Z) hoặc số trong khoảng từ 0 đến 25");
             return;
         }
         setKeyMatrix(newKeyMatrix);
@@ -273,7 +278,7 @@ const Decrypt = () => {
                                 >
                                     Giải mã
                                 </button>
-                                {errorMessage && <AlertBox message={errorMessage} type="error" />}
+                                {error && <AlertBox message={error} type="error" />}
                             </div>
                             <label className="block text-gray-700 mb-2">Văn bản giải mã</label>
                             <div className="flex items-center space-x-4">

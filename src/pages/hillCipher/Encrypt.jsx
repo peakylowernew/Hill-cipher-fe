@@ -40,14 +40,15 @@ const Encrypt = () => {
     const [steps, setSteps] = useState([]);
     const [showMatrix, setShowMatrix] = useState(false);
     const navigate = useNavigate();
-    const userId = getUid();
+    const [error, setError] = useState(null);
+
     // Hàm mã hóa
     const handleEncrypt = async (e) => {
         e.preventDefault();
     
 
         if (!plainText.trim() || keyMatrix.some(val => val === "")) {
-            alert("Vui lòng nhập đầy đủ dữ liệu!");
+            setError("Vui lòng nhập đầy đủ dữ liệu!");
             return;
         }
     
@@ -57,11 +58,7 @@ const Encrypt = () => {
                   
                     if (token && uid) {
                       const decoded = jwtDecode(token);
-                    //   console.log(" Token:", decoded); // In ra toàn bộ payload của token
-                    //   console.log(" Uid:", uid); // In ra toàn bộ payload của uid
-            
                       if (decoded.email) {
-                        // setUser({ email: decoded.email, uid });
                       } else {
                         console.error("Không tìm thấy email trong token", decoded);
                       }
@@ -75,19 +72,28 @@ const Encrypt = () => {
                 uid
             );
             
+            if (response.error) {
+                setError(response.error);
+                setCipherText("");
+                setSteps([]);
+                return;
+            }
+            
             if (response && response.encryptedText && Array.isArray(response.processSteps)) {
                 setCipherText(response.encryptedText);
                 setSteps(response.processSteps);
+                setError(null);
             } else {
-                const message = response?.message;
-                alert(message);
+                setError("Phản hồi không hợp lệ từ server");
             }
         } catch (error) {
-            console.error("Lỗi khi mã hóa:", error);
             setCipherText("");
             setSteps([]);
-            const message = error?.response?.data?.message || error?.message || "Có lỗi trong quá trình mã hóa!";
-            alert(message);
+            const message =
+                error?.response?.data?.error || 
+                error?.message || 
+                "Có lỗi trong quá trình mã hóa!";
+            setError(message);
         }
     };
     
@@ -105,7 +111,7 @@ const Encrypt = () => {
             setKeyMatrix(Array(matrixSize * matrixSize).fill("")); // Khởi tạo ma trận rỗng
             setShowMatrix(true);
         } else {
-            alert("Kích thước ma trận phải từ 2x2 trở lên!");
+            setError("Kích thước ma trận phải từ 2x2 trở lên!");
         }
     };
 
@@ -125,11 +131,11 @@ const Encrypt = () => {
             if (number >= 0 && number <= 25) {
                 newKeyMatrix[index] = number;
             } else {
-                alert("Số phải trong khoảng từ 0 đến 25");
+                setError("Số phải trong khoảng từ 0 đến 25");
                 return;
             }
         } else {
-            alert("Vui lòng nhập chữ cái (A-Z) hoặc số trong khoảng từ 0 đến 25");
+            setError("Vui lòng nhập chữ cái (A-Z) hoặc số trong khoảng từ 0 đến 25");
             return;
         }
 
@@ -224,6 +230,12 @@ const Encrypt = () => {
                                 >
                                     Mã hóa
                                 </button>
+                                {error && (
+                                    <div className="text-red-600 font-semibold mb-4">
+                                        ⚠️ {error}
+                                    </div>
+                                    )}
+
                             </div>
                             <label className="block text-gray-700 mb-2">Văn bản mã hóa</label>
                             <div className="flex items-center space-x-4">
