@@ -21,7 +21,7 @@ const Signup = () => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Đăng ký thành công!");
+        setError("Đăng ký thành công!");
         navigate("/login");
       } else {
         setError(data.message || "Đăng ký thất bại");

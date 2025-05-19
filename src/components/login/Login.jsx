@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { login } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"; // dùng để giải mã token để lấy UIDUID
 import { GoogleLogin } from '@react-oauth/google';// login bằng google
 
@@ -72,7 +72,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-500 to-gray-700">
-      <div className="login-form bg-white p-8 rounded-2xl shadow-lg w-full max-w-md transform transition-all hover:scale-105 group">
+      <div className="login-form bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Đăng Nhập</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-5">
@@ -119,7 +119,7 @@ const Login = () => {
                 <input type="checkbox" className="accent-gray-500" />
                 <span className="text-gray-300">Remember me</span>
               </label>
-              {/* <Link to="/" className="text-gray-500 hover:text-gray-800"></Link> */}
+              <Link to="/signup" className="text-gray-500 hover:text-gray-800">Đăng ký ngay</Link>
             </div>
           </div>
           {error && (

@@ -15,18 +15,16 @@ export async function encryptText(text, keyMatrixString, userId ) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text, keyMatrix: formattedKeyMatrix, userId  }),
         });
+        
+        const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+            throw new Error(data.error || `Server returned ${response.status}: ${response.statusText}`);
         }
-
-        const data = await response.json();
         console.log("API Response:", data);
-
         if (!data.encryptedText) {
             throw new Error("Không có dữ liệu mã hóa");
         }
-
         const processSteps = data.steps || [];
         return {
             encryptedText: data.encryptedText,
@@ -34,7 +32,8 @@ export async function encryptText(text, keyMatrixString, userId ) {
             originalText: data.originalText,
         };
     } catch (error) {
-        return { encryptedText: '', processSteps: [], originalText: '' };
+        // return { encryptedText: '', processSteps: [], originalText: '' };
+        return { error: error.message || "Lỗi không xác định" };
     }
 }
 
@@ -56,17 +55,16 @@ export async function decryptText(text, keyMatrixString, userId, originalText) {
         });
 
         console.log("API response:", response);
+        const data = await response.json();
         
         if (!response.ok) {
-            throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+            throw new Error(data.error || `Server returned ${response.status}: ${response.statusText}`);
         }
         
-        const data = await response.json();
         console.log("API Response:", data);
         return data;
+
     } catch (error) {
-        console.error("Lỗi khi giải mã:", error.message);
-        console.log("Full error object:", error);
-        throw error;
+        return { error: error.message || "Lỗi không xác định" };
     }
 }
