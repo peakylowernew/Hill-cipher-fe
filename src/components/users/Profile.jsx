@@ -11,7 +11,8 @@ const Profile = () => {
   const [selectedTool, setSelectedTool] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ name: "", avatar: "" });
-  
+  const [ error, setError] = useState("");
+
   useEffect(() => {
     const fetchUserData = async () => {
       const uid = getUid();
@@ -268,12 +269,12 @@ const Profile = () => {
                     try {
                       const uid = getUid();
                       await axios.put(`${process.env.REACT_APP_API_URL}/api/auth/user/${uid}`, formData);
-                      alert("Cập nhật thành công.");
+                      setError("Cập nhật thành công.");
                       setUser((prev) => ({ ...prev, ...formData }));
                       setIsEditing(false);
                     } catch (err) {
                       console.error(err);
-                      alert("Lỗi khi cập nhật.");
+                      setError("Lỗi khi cập nhật.");
                     }
                   }}
                 >
@@ -290,6 +291,18 @@ const Profile = () => {
           </div>
         )}
       </main>
+      {error && (
+        <div className="max-w-5xl mx-auto mt-4 p-4 bg-red-100 text-red-800 rounded shadow">
+          <p>{error}</p>
+          <button
+            onClick={() => setError("")}
+            className="mt-2 text-sm text-red-600 underline hover:text-red-800"
+          >
+            Đóng
+          </button>
+        </div>
+      )}
+
     </div>
   );
 };
