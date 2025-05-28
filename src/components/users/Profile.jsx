@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "../../layout/Header";
-import { FaBook, FaPhone, FaTimes } from "react-icons/fa";
+import { FaBook, FaTimes } from "react-icons/fa";
 import { getUid } from "../../utils/auth";
 
 const Profile = () => {
@@ -33,9 +33,9 @@ const Profile = () => {
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu người dùng:", error);
         if (error.response && error.response.status === 404) {
-          alert("Người dùng không tồn tại.");
+          setError("Người dùng không tồn tại.");
         } else {
-          alert("Có lỗi xảy ra. Vui lòng thử lại sau.");
+          setError("Có lỗi xảy ra. Vui lòng thử lại sau.");
         }
       }
     };
@@ -60,13 +60,21 @@ const Profile = () => {
     setIsModalOpen(true);
   };
 
-  const uploadImageToImgbb = async (file) => {
-    const apiKey = "bd430a161dc0d708ac12f4601a091d56"; 
-    const formData = new FormData();
-    formData.append("image", file);
+  const uploadImageToCloudinary = async (file) => {
+    const cloudName = "dct5ysc7b";
+    const uploadPreset = "HILLCIPHER";
 
-    const res = await axios.post(`https://api.imgbb.com/1/upload?key=${apiKey}`, formData);
-    return res.data.data.url;
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", uploadPreset);
+
+    try {
+      const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
+      return res.data.secure_url;
+    } catch (error) {
+      console.error("Upload lỗi:", error);
+      throw error;
+    }
   };
 
   return (
@@ -92,7 +100,7 @@ const Profile = () => {
                   setIsEditing(true);
                 }}
               >
-                Edit Profile
+                Chỉnh sửa hồ sơ
             </button>
           </div>
         </section>
@@ -105,23 +113,19 @@ const Profile = () => {
               <FaBook className="text-gray-400" />
               <p className="text-black">Email: {user?.email || "Đang tải..."}</p>
             </div>
-            <div className="flex items-center gap-3">
-              <FaPhone className="text-gray-400" />
-              <p className="text-black">Phone: {user?.phone || "Chưa cập nhật"}</p>
-            </div>
           </div>
         </section>
 
         {/* Lịch sử sử dụng công cụ */}
         <section className="bg-white p-6 rounded-xl shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Tool usage history</h2>
+          <h2 className="text-xl font-semibold mb-4">Lịch sử sử dụng công cụ</h2>
           <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700">
             <table className="w-full text-sm text-left">
               <thead className="sticky top-0 bg-gray-200 text-black">
                 <tr className="border-b border-gray-600">
-                  <th className="p-3">Tools</th>
-                  <th className="p-3">Day</th>
-                  <th className="p-3 text-right">detail</th>
+                  <th className="p-3">Công cụ</th>
+                  <th className="p-3">Ngày giờ thực hiện</th>
+                  <th className="p-3 text-right">Chi tiết</th>
                 </tr>
               </thead>
               <tbody>
@@ -244,12 +248,12 @@ const Profile = () => {
                     const file = e.target.files[0];
                     if (file) {
                       try {
-                        const imageUrl = await uploadImageToImgbb(file);
+                        const imageUrl = await uploadImageToCloudinary(file);
                         setFormData((prev) => ({ ...prev, avatar: imageUrl }));
-                        alert("Tải ảnh thành công!");
+                        setError("Tải ảnh thành công!");
                       } catch (error) {
                         console.error("Upload lỗi:", error);
-                        alert("Tải ảnh thất bại.");
+                        setError("Tải ảnh thất bại.");
                       }
                     }
                   }}

@@ -194,7 +194,7 @@ const Encrypt = () => {
                                                 setKeyMatrix(randomMatrix.map(v => v));
                                                 setShowMatrix(true);
                                             } else {
-                                                alert("Kích thước ma trận phải từ 2x2 trở lên!");
+                                                setError("Kích thước ma trận phải từ 2x2 trở lên!");
                                             }
                                         }}
                                     >
