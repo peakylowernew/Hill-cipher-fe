@@ -14,11 +14,11 @@ export default function Home() {
         if (storedUser) {
             try {
                 const parsedUser = JSON.parse(storedUser);
-                console.log("Stored User:", parsedUser);  // Xem dữ liệu user lưu trong localStorage
-                setUser(parsedUser);  // Lưu thông tin user nếu parse thành công
+                console.log("Stored User:", parsedUser);
+                setUser(parsedUser);
             } catch (error) {
                 console.error("Lỗi parse JSON:", error);
-                localStorage.removeItem("user");  // Xóa dữ liệu lỗi
+                localStorage.removeItem("user");
             }
         }
     }, []);
@@ -27,7 +27,7 @@ export default function Home() {
         if (user) {
           navigate("/hillcipher");
         } else {
-          console.log("User data is null or undefined");  // Log khi user null
+          console.log("User data is null or undefined");
           navigate("/login");
         }
     };

@@ -61,6 +61,10 @@ const Login = () => {
       if (res.ok) {
         localStorage.setItem('token', data.token); // token backend trả về
         localStorage.setItem('uid', data.uid); // nếu backend có trả uid
+        
+        const user = { token: data.token, uid: data.uid };
+        localStorage.setItem('user', JSON.stringify(user));
+
         navigate("/profile");
       } else {
         console.error(data);
