@@ -79,7 +79,7 @@ const Header = () => {
                 {isMenuOpen && (
                    <div className="absolute top-10 left-0 bg-gray-300 rounded-xl p-4 flex flex-col space-y-2 z-50 shadow-md min-w-[120px]">
                     {[
-                        { label: "Trang chủ", path: "/home" },
+                        { label: "Trang chủ", path: "/" },
                         { label: "Công cụ", path: "/hillcipher" },
                         { label: "Tài liệu", path: "/docs" },
                         { label: "Chúng tôi", path: "/about" }
@@ -98,11 +98,11 @@ const Header = () => {
             </div>
             {/* Title */}
             <div className="flex-1 text-center px-4">
-                <Link to="/home" className="text-xl font-bold hidden md:block">
+                <Link to="/" className="text-xl font-bold hidden md:block">
                     Tìm hiểu công nghệ Jamstack và xây dựng ứng dụng Web minh họa thuật toán mã hóa và giải mã Hill
                 </Link>
 
-                <Link to="/home" className="text-xl font-bold md:hidden">
+                <Link to="/" className="text-xl font-bold md:hidden">
                     Thuật toán mã hóa và giải mã Hill
                 </Link>
             </div>
