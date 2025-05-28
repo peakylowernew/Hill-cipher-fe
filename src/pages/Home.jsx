@@ -72,12 +72,6 @@ export default function Home() {
                           <h3 className="font-semibold text-slate-800">Mã hóa an toàn</h3>
                           <p className="text-slate-600 mt-2">Mã hóa dựa trên ma trận để tăng cường bảo mật</p>
                         </div>
-                        {/* <div className="bg-white p-6 rounded-lg shadow-xl transform hover:scale-105 
-                          transition-transform mt-8">
-                          <RiFunctionLine className="w-10 h-10 text-purple-600 mb-4" />
-                          <h3 className="font-semibold text-slate-800">Matrix Operations</h3>
-                          <p className="text-slate-600 mt-2">Linear algebra meets cryptography</p>
-                        </div> */}
                         <div className="flex items-center justify-center w-full h-full md:w-[300px] md:h-[200px] transition-all duration-300">
                           <DotLottieReact
                             src="https://lottie.host/fbead96f-094e-4732-919e-387ebfda72fc/wlkcjZatwQ.lottie"
@@ -136,13 +130,21 @@ export default function Home() {
                     See It in Action
                   </h2>
                   <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-12">
-                    Watch how the Hill cipher transforms plain text into encrypted messages 
-                    using matrix operations and mathematical principles.
+                    Xem cách mã hóa Hill chuyển đổi văn bản thuần túy thành thông điệp được mã hóa
+                    bằng cách sử dụng các phép toán ma trận và nguyên lý toán học.
                   </p>
                   <div className="aspect-video bg-white rounded-xl shadow-2xl p-8">
                     {/* Placeholder for interactive demo or animation */}
                     <div className="h-full flex items-center justify-center">
-                      <p className="text-slate-400">Interactive Demo Coming Soon</p>
+                      <video
+                        src="mp4/action.mp4"
+                        type="video/mp4"
+                        autoPlay
+                        muted
+                        playsInline
+                        loop
+                        className="w-full h-full object-contain pointer-events-none"
+                      />
                     </div>
                   </div>
                 </div>

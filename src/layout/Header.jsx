@@ -77,21 +77,32 @@ const Header = () => {
 
                 {/* Menu dropdown */}
                 {isMenuOpen && (
-                    <div className="absolute top-10 left-0 bg-gray-300 rounded-xl p-4 flex flex-col space-y-2 z-50 shadow-md min-w-[120px]">
-                        <Link to="/" className="text-black hover:underline">Home</Link>
-                        <Link to="/hillcipher" className="text-black hover:underline">Tools</Link>
-                        <Link to="/docs" className="text-black hover:underline">Docs</Link>
-                        <Link to="/about" className="text-black hover:underline">About</Link>
+                   <div className="absolute top-10 left-0 bg-gray-300 rounded-xl p-4 flex flex-col space-y-2 z-50 shadow-md min-w-[120px]">
+                    {[
+                        { label: "Trang chủ", path: "/home" },
+                        { label: "Công cụ", path: "/hillcipher" },
+                        { label: "Tài liệu", path: "/docs" },
+                        { label: "Chúng tôi", path: "/about" }
+                    ].map((item) => (
+                        <Link
+                        key={item.path}
+                        to={item.path}
+                        className="relative text-black after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-black after:transition-all after:duration-300 hover:after:w-full hover:text-indigo-700 transition-colors"
+                        >
+                        {item.label}
+                        </Link>
+                    ))}
                     </div>
+
                 )}
             </div>
             {/* Title */}
             <div className="flex-1 text-center px-4">
-                <Link to="/" className="text-xl font-bold hidden md:block">
+                <Link to="/home" className="text-xl font-bold hidden md:block">
                     Tìm hiểu công nghệ Jamstack và xây dựng ứng dụng Web minh họa thuật toán mã hóa và giải mã Hill
                 </Link>
 
-                <Link to="/" className="text-xl font-bold md:hidden">
+                <Link to="/home" className="text-xl font-bold md:hidden">
                     Thuật toán mã hóa và giải mã Hill
                 </Link>
             </div>
@@ -109,7 +120,7 @@ const Header = () => {
                             onClick={handleLogout}
                             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
                         >
-                            Logout
+                            Đăng xuất
                         </button>
                     </>
                 ) : (
@@ -117,12 +128,12 @@ const Header = () => {
                         <button 
                             onClick={handleLogin}
                             className="bg-white text-blue-500 px-4 py-2 rounded-md mr-2 hover:bg-blue-500 hover:text-white">
-                            Login
+                            Đăng nhập
                         </button>
                         <button 
                             onClick={handleSignUp}
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-blue-500">
-                            Sign Up
+                            Đăng ký
                         </button>
                     </>
                 )}
